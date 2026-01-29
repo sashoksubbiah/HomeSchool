@@ -823,9 +823,70 @@
             <div class="progress-label">Lesson Progress</div>
         </div>
         <div class="game-stats">
+            <button class="audio-btn" id="autoVoiceBtn" onclick="toggleAutoVoice()">🔊 Voice: ON</button>
+            <button class="audio-btn" onclick="stopSpeaking()">⏹️ Stop</button>
             <div class="stat">⭐ <span id="starsEarned">0</span></div>
         </div>
     </div>
+
+    <style>
+        .audio-btn {
+            padding: 10px 18px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            color: var(--text-primary);
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .audio-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .audio-btn.active {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-color: transparent;
+        }
+
+        .speak-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .speak-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .speak-btn.speaking {
+            animation: speakPulse 1s infinite;
+        }
+
+        @keyframes speakPulse {
+
+            0%,
+            100% {
+                box-shadow: 0 4px 15px rgba(6, 182, 212, 0.4);
+            }
+
+            50% {
+                box-shadow: 0 4px 30px rgba(6, 182, 212, 0.8);
+            }
+        }
+    </style>
 
     <div class="container">
         <!-- Topic Selection -->
@@ -1117,6 +1178,76 @@
     <div class="confetti-container" id="confetti"></div>
 
     <script>
+        // ========== VOICE NARRATION SYSTEM ==========
+        let autoVoice = true;
+        let currentUtterance = null;
+
+        // Lesson narration scripts for each step
+        const stepNarrations = {
+            1: "Hey there, young scientist! Have you ever noticed something strange? When you put ice cubes in a glass, they slowly disappear! Where do you think the ice goes? Click on your answer!",
+            2: "Great thinking! Yes, ice turns into water! But wait, here's something amazing! The ice didn't really disappear. It just changed its form! Let me tell you the big secret... Everything around you, your toys, water, even the air you breathe, is made of tiny tiny pieces called particles! They're so small you can't see them, but they're always there!",
+            3: "Now watch carefully! I'll show you what happens to particles when you heat or cool them. Try the buttons below to change the temperature! Click cool down, warm up, or heat more to see the particles move differently!",
+            4: "Did you see that? Woohoo! Here's why it happens. When it's cold, particles don't have much energy. They huddle together and just vibrate in place. That's why ice keeps its shape! When you add heat, particles get more energy! They start sliding past each other. That's why water can flow and splash! With lots of heat, particles go crazy! They fly everywhere super fast. That's why steam floats up and spreads out!",
+            5: "You're doing amazing! Let's see what you learned! Answer these questions to earn your Science Star!"
+        };
+
+        function speak(text, onEnd) {
+            stopSpeaking();
+            if (!('speechSynthesis' in window)) {
+                console.warn('Speech synthesis not supported');
+                return;
+            }
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 0.85;  // Slower for kids
+            utterance.pitch = 1.15; // Slightly higher pitch
+            utterance.volume = 1;
+
+            // Try to get a good voice
+            const voices = speechSynthesis.getVoices();
+            const preferredVoice = voices.find(v =>
+                v.name.includes('Google') && v.lang.startsWith('en') ||
+                v.name.includes('Zira') ||
+                v.name.includes('Samantha') ||
+                v.lang.startsWith('en')
+            );
+            if (preferredVoice) utterance.voice = preferredVoice;
+
+            utterance.onend = () => {
+                currentUtterance = null;
+                if (onEnd) onEnd();
+            };
+
+            currentUtterance = utterance;
+            speechSynthesis.speak(utterance);
+        }
+
+        function stopSpeaking() {
+            if ('speechSynthesis' in window) {
+                speechSynthesis.cancel();
+            }
+            currentUtterance = null;
+        }
+
+        function toggleAutoVoice() {
+            autoVoice = !autoVoice;
+            const btn = document.getElementById('autoVoiceBtn');
+            btn.textContent = '🔊 Voice: ' + (autoVoice ? 'ON' : 'OFF');
+            btn.classList.toggle('active', autoVoice);
+            if (autoVoice) {
+                speakCurrentStep();
+            } else {
+                stopSpeaking();
+            }
+        }
+
+        function speakCurrentStep() {
+            if (autoVoice && stepNarrations[currentStep]) {
+                setTimeout(() => speak(stepNarrations[currentStep]), 500);
+            }
+        }
+
+        // ========== PARTICLE ANIMATION ==========
         // Generate particles
         function createParticles() {
             const box = document.getElementById('particleBox');
@@ -1166,10 +1297,14 @@
         function startLesson(topic) {
             document.getElementById('topicSelect').style.display = 'none';
             document.getElementById('lesson-' + topic).classList.add('active');
+            currentStep = 1;
             updateProgress();
+            // Start voice narration for step 1
+            speakCurrentStep();
         }
 
         function backToTopics() {
+            stopSpeaking();
             document.querySelectorAll('.lesson-container').forEach(l => l.classList.remove('active'));
             document.getElementById('topicSelect').style.display = 'block';
             currentStep = 1;
@@ -1177,18 +1312,24 @@
         }
 
         function nextStep() {
+            stopSpeaking();
             document.querySelector(`[data-step="${currentStep}"]`).style.display = 'none';
             currentStep++;
             document.querySelector(`[data-step="${currentStep}"]`).style.display = 'block';
             updateProgress();
             window.scrollTo({ top: 0, behavior: 'smooth' });
+            // Narrate the new step
+            speakCurrentStep();
         }
 
         function prevStep() {
+            stopSpeaking();
             document.querySelector(`[data-step="${currentStep}"]`).style.display = 'none';
             currentStep--;
             document.querySelector(`[data-step="${currentStep}"]`).style.display = 'block';
             updateProgress();
+            // Narrate the step we went back to
+            speakCurrentStep();
         }
 
         function updateProgress() {
@@ -1303,7 +1444,7 @@
             }
         }
 
-        // Load saved progress
+        // Load saved progress and initialize voice
         document.addEventListener('DOMContentLoaded', () => {
             const stars = parseInt(localStorage.getItem('science_stars') || 0);
             document.getElementById('starsEarned').textContent = stars;
@@ -1313,6 +1454,17 @@
                 const el = document.getElementById('topic-' + topic);
                 if (el) el.classList.add('completed');
             });
+
+            // Initialize voice system
+            if ('speechSynthesis' in window) {
+                // Load voices
+                speechSynthesis.getVoices();
+                speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
+
+                // Set initial button state
+                const voiceBtn = document.getElementById('autoVoiceBtn');
+                if (voiceBtn) voiceBtn.classList.add('active');
+            }
         });
     </script>
 </body>
