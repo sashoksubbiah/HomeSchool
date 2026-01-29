@@ -211,7 +211,7 @@
             display: flex; justify-content: space-between; align-items: center;
             background: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.05); z-index: 100;
             box-sizing: border-box;
-            flex-shrink: 0; /* Prevent HUD from shrinking */
+            flex-shrink: 0; 
         }
 
         .home-btn {
@@ -307,6 +307,7 @@
             display: flex; justify-content: center; align-items: flex-end;
             margin-bottom: 20px;
             flex-shrink: 0; /* Prevent squishing */
+            cursor: pointer; /* INTERACTIVE */
         }
         .beaker {
             width: 200px; height: 250px; border: 8px solid #555; border-top: none;
@@ -321,28 +322,40 @@
         .substance {
             position: absolute; bottom: 0; left: 0; width: 100%; height: 0%;
             transition: all 1s ease; display: flex; justify-content: center; align-items: center;
-            font-size: 4rem;
+            font-size: 4rem; overflow: hidden; /* For particles */
         }
         
+        /* Particle Styles */
+        .particle {
+            position: absolute; width: 12px; height: 12px; 
+            background: rgba(255,255,255,0.8); border-radius: 50%;
+            transition: top 0.5s, left 0.5s, transform 0.2s;
+            box-shadow: 0 0 5px rgba(255,255,255,0.5);
+        }
+
         .state-solid { height: 40%; background: #E1F5FE; align-items: center; } 
-        .state-solid::after { content: '🧊'; }
+        /* .state-solid::after { content: '🧊'; opacity: 0.2; position:absolute; } */
         
         .state-liquid { height: 60%; background: #2196F3; opacity: 0.8; align-items: flex-end; padding-bottom: 20px; }
-        .state-liquid::after { content: '💧'; animation: float 2s infinite ease-in-out; }
+        /* .state-liquid::after { content: '💧'; animation: float 2s infinite ease-in-out; opacity: 0.2; position:absolute;} */
 
         .state-gas { height: 100%; background: transparent; align-items: flex-start; padding-top: 40px; }
-        .state-gas::after { 
-            content: '☁️'; 
-            animation: rise-expand 2.5s infinite linear; 
-            opacity: 0.7; 
-            font-size: 5rem; 
+        
+        .gas-cloud {
+            position: absolute; font-size: 5rem; opacity: 0.6;
+            animation: rise-expand 2.5s infinite linear;
+            left: 50%; transform: translateX(-50%);
         }
 
         @keyframes rise-expand { 
-            0% { bottom: -20px; transform: translateX(0) scale(1); opacity: 0; } 
+            0% { bottom: -20px; transform: translateX(-50%) scale(1); opacity: 0; } 
             50% { opacity: 1; } 
-            100% { bottom: 100%; transform: translateX(20px) scale(1.5); opacity: 0; } 
+            100% { bottom: 100%; transform: translateX(-50%) scale(1.5); opacity: 0; } 
         }
+
+        /* Shake animation for ice click */
+        .shake-anim { animation: shake 0.5s; }
+        @keyframes shake { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-5deg); } 75% { transform: rotate(5deg); } }
 
         .burner {
             width: 200px; height: 20px; background: #333; margin-top: 5px; border-radius: 5px;
@@ -366,6 +379,8 @@
         .btn-heat { background: #FF5722; color: white; }
         .btn-cool { background: #2196F3; color: white; }
         .temp-btn:active { transform: translateY(4px); box-shadow: none; }
+        
+        .btn-mix { background: #9C27B0; color: white; font-size: 1.5rem; width: auto; padding: 0 20px; border-radius: 30px; height: 50px; }
 
         .thermometer-container {
             width: 20px; height: 200px; background: #eee; border-radius: 10px;
@@ -487,9 +502,11 @@
 
             <!-- === EXPERIMENT 2: STATES OF MATTER === -->
             <div id="matter-stage">
-                <div class="beaker-container">
+                <div class="beaker-container" onclick="interactMatter()">
                     <div class="beaker">
-                        <div class="substance state-solid" id="matter-substance"></div>
+                        <div class="substance state-solid" id="matter-substance">
+                            <!-- Particles injected via JS -->
+                        </div>
                     </div>
                     <div class="burner">
                         <div class="flame" id="matter-flame">🔥</div>
@@ -507,20 +524,23 @@
                     </div>
                     <button class="temp-btn btn-heat" onclick="changeTemp(1)">🔥</button>
                 </div>
+                
+                <!-- Fun Extra: Food Color -->
+                <button class="temp-btn btn-mix" style="margin-top:10px; background:#9C27B0;" onclick="dropColor()">🎨 Drop Color</button>
 
                 <!-- Detailed Explanation Cards -->
                 <div class="explanation-container">
                     <div class="expl-card solid" id="expl-solid">
                         <h3>🧊 Solid (Ice)</h3>
-                        <p>Brr! It is cold. The tiny particles hold hands tightly and don't move much. They form a hard shape.</p>
+                        <p>Brr! Click the ice to hear it CLINK! The particles are shivering in place because they are cold.</p>
                     </div>
                     <div class="expl-card liquid" id="expl-liquid">
                         <h3>💧 Liquid (Water)</h3>
-                        <p>Getting warmer! Heat gives particles energy to dance and slide around each other. This makes water flow!</p>
+                        <p>Splash! Click the water! The particles are sliding around like they are in a swimming pool.</p>
                     </div>
                     <div class="expl-card gas" id="expl-gas">
                         <h3>☁️ Gas (Steam)</h3>
-                        <p>Super Hot! The particles have so much energy they fly apart! They spread out to fill all the space.</p>
+                        <p>Whoosh! Click the beaker to catch steam! The particles are flying away super fast.</p>
                     </div>
                 </div>
 
@@ -574,7 +594,7 @@
                         title: "States of Matter", 
                         icon: "🧊", 
                         desc: "Solid, Liquid, Gas & Changes.", 
-                        locked: false // UNLOCKED NOW
+                        locked: false 
                     }
                 ]
             },
@@ -928,7 +948,7 @@
         // ==========================================
         
         let matterTemp = 0; // 0 (Solid) to 2 (Gas)
-        let matterState = 'solid';
+        let particles = [];
 
         function initMatter() {
             // UI Setup
@@ -939,10 +959,28 @@
 
             // Reset
             matterTemp = 0;
-            updateMatterVisuals(true); // true = initial silent update
+            // Create particles
+            const sub = document.getElementById('matter-substance');
+            sub.innerHTML = '';
+            particles = [];
+            for(let i=0; i<9; i++) {
+                let p = document.createElement('div');
+                p.className = 'particle';
+                sub.appendChild(p);
+                particles.push(p);
+            }
+            // Add gas cloud element (hidden initially)
+            const cloud = document.createElement('div');
+            cloud.className = 'gas-cloud';
+            cloud.innerText = '☁️';
+            cloud.style.display = 'none';
+            cloud.id = 'gas-cloud-anim';
+            sub.appendChild(cloud);
+
+            updateMatterVisuals(true);
             document.getElementById('match-icon').innerText = "📍";
             
-            speak("Welcome to the Matter Lab! Everything is made of tiny particles. Use heat to see how they move!");
+            speak("Welcome to the Matter Lab! See those white dots? Those are particles! Click them to see what happens!");
         }
 
         function changeTemp(dir) {
@@ -952,55 +990,127 @@
             updateMatterVisuals(false);
         }
 
+        // Fun Interaction Handler
+        window.interactMatter = function() {
+            const sub = document.getElementById('matter-substance');
+            if (matterTemp === 0) {
+                // Ice Shake
+                sub.parentElement.classList.remove('shake-anim');
+                void sub.parentElement.offsetWidth; // trigger reflow
+                sub.parentElement.classList.add('shake-anim');
+                speak("Clink! Clink! It is hard ice!");
+            } else if (matterTemp === 1) {
+                // Water Splash
+                speak("Splish Splash! Wet water!");
+                // Simple ripple effect visual hack
+                sub.style.opacity = 0.5;
+                setTimeout(() => sub.style.opacity = 0.8, 200);
+            } else if (matterTemp === 2) {
+                // Gas Whoosh
+                speak("Whoosh! Catch the steam!");
+            }
+        }
+
+        // Food Color Feature
+        window.dropColor = function() {
+            if(matterTemp !== 1) {
+                speak("We need Liquid water to mix the color! Melt the ice first.");
+                return;
+            }
+            
+            const sub = document.getElementById('matter-substance');
+            const drop = document.createElement('div');
+            drop.style.position = 'absolute';
+            drop.style.width = '20px'; drop.style.height = '20px';
+            drop.style.borderRadius = '50%'; drop.style.background = '#9C27B0';
+            drop.style.top = '-50px'; drop.style.left = '50%';
+            drop.style.transition = 'top 0.5s ease-in';
+            sub.appendChild(drop);
+            
+            setTimeout(() => {
+                drop.style.top = '50%';
+            }, 50);
+
+            setTimeout(() => {
+                // Spread color
+                drop.style.transition = 'all 1s';
+                drop.style.transform = 'scale(10)';
+                drop.style.opacity = 0;
+                sub.style.backgroundColor = '#9C27B0'; // Tint water
+                speak("Look! The color particles spread out and mix with the water particles!");
+            }, 600);
+        }
+
         function updateMatterVisuals(silent) {
             const sub = document.getElementById('matter-substance');
             const merc = document.getElementById('matter-mercury');
             const flame = document.getElementById('matter-flame');
             const disp = document.getElementById('temp-display');
-
-            // Explanation Cards
-            const cardSolid = document.getElementById('expl-solid');
-            const cardLiquid = document.getElementById('expl-liquid');
-            const cardGas = document.getElementById('expl-gas');
+            const cloud = document.getElementById('gas-cloud-anim');
 
             // Reset Classes
             sub.className = 'substance';
+            sub.style.backgroundColor = ''; // Reset color from dye
             flame.classList.remove('active');
+            cloud.style.display = 'none';
             
-            // Remove active highlight from text
-            cardSolid.classList.remove('active');
-            cardLiquid.classList.remove('active');
-            cardGas.classList.remove('active');
+            // Remove highlighting
+            document.querySelectorAll('.expl-card').forEach(c => c.classList.remove('active'));
 
             if (matterTemp === 0) {
                 // SOLID
                 sub.classList.add('state-solid');
                 merc.style.height = '20%';
-                merc.style.background = '#2196F3'; // Cold blue
+                merc.style.background = '#2196F3';
                 disp.innerText = "Solid (Ice)";
-                cardSolid.classList.add('active'); // Highlight
+                document.getElementById('expl-solid').classList.add('active');
                 
-                if(!silent) speak("Freezing! The water particles are cold and holding hands tightly. They can't move, so they form hard Ice.");
+                // Align particles in Grid (Solid Structure)
+                particles.forEach((p, i) => {
+                    p.style.left = (30 + (i%3)*20) + '%';
+                    p.style.top = (20 + Math.floor(i/3)*20) + '%';
+                    p.style.animation = 'none'; // No big movement
+                    // Tiny vibration
+                    p.style.transform = 'translate(0,0)';
+                });
+
+                if(!silent) speak("Freezing! Particles hold hands tightly in a grid. Click the ice!");
+            
             } else if (matterTemp === 1) {
                 // LIQUID
                 sub.classList.add('state-liquid');
                 merc.style.height = '50%';
-                merc.style.background = '#FF9800'; // Warm
+                merc.style.background = '#FF9800';
                 flame.classList.add('active'); 
                 disp.innerText = "Liquid (Water)";
-                cardLiquid.classList.add('active'); // Highlight
+                document.getElementById('expl-liquid').classList.add('active');
 
-                if(!silent) speak("Melting! Heat gives the particles energy to dance and slide around. That is why Liquid water flows!");
+                // Random particles at bottom (Liquid)
+                particles.forEach((p) => {
+                    p.style.left = (Math.random() * 80 + 10) + '%';
+                    p.style.top = (Math.random() * 60 + 30) + '%';
+                    p.style.animation = 'none'; 
+                });
+
+                if(!silent) speak("Melting! Particles slide around. Add some color to see them move!");
+
             } else if (matterTemp === 2) {
                 // GAS
                 sub.classList.add('state-gas');
                 merc.style.height = '90%';
-                merc.style.background = '#F44336'; // Hot
+                merc.style.background = '#F44336';
                 flame.classList.add('active');
                 disp.innerText = "Gas (Steam)";
-                cardGas.classList.add('active'); // Highlight
+                cloud.style.display = 'block'; // Show steam cloud
+                document.getElementById('expl-gas').classList.add('active');
 
-                if(!silent) speak("Boiling! The particles are super hot and fast! They fly apart and spread out to become Gas!");
+                // Particles fly everywhere
+                particles.forEach((p) => {
+                    p.style.left = (Math.random() * 100) + '%';
+                    p.style.top = (Math.random() * 100) + '%';
+                });
+
+                if(!silent) speak("Boiling! Particles fly apart! Click to catch them!");
             }
         }
 
