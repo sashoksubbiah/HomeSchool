@@ -176,8 +176,6 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            overflow-y: auto; /* ENABLE SCROLLING */
-            -webkit-overflow-scrolling: touch;
         }
 
         #robot-container {
@@ -211,7 +209,6 @@
             display: flex; justify-content: space-between; align-items: center;
             background: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.05); z-index: 100;
             box-sizing: border-box;
-            flex-shrink: 0; 
         }
 
         .home-btn {
@@ -226,7 +223,7 @@
         .phase { padding: 8px 15px; background: #eee; border-radius: 15px; color: #aaa; font-size: 0.9rem; font-weight: bold; }
         .phase.active { background: #FF9800; color: white; transform: scale(1.1); box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
 
-        #lab-area { flex: 1; width: 100%; position: relative; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 20px; min-height: 400px; }
+        #lab-area { flex: 1; width: 100%; position: relative; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 20px; }
         #tank-container {
             position: relative; width: 80%; max-width: 600px; height: 55vh;
             border: 8px solid #333; border-top: none; border-radius: 0 0 20px 20px;
@@ -295,145 +292,81 @@
         .result-fact { background: #E8F5E9; padding: 15px; border-radius: 10px; margin: 20px 0; font-size: 1.1rem; line-height: 1.5; color: #2E7D32; border: 1px solid #C8E6C9; }
         .reset-btn { background: #333; color: white; padding: 15px 30px; border-radius: 30px; font-size: 1.2rem; border: none; cursor: pointer; pointer-events: auto; }
 
-        /* --- MATTER EXPERIMENT STYLES --- */
+        /* --- NEW SIMPLIFIED MATTER STYLES --- */
         #matter-stage {
-            flex: 1; width: 100%; position: relative; display: none; /* Toggled via JS */
-            flex-direction: column; align-items: center; justify-content: flex-start; /* Changed for scroll */
-            padding-top: 20px; padding-bottom: 50px;
+            flex: 1; width: 100%; position: relative; display: none;
+            flex-direction: column; align-items: center; padding-top: 20px;
         }
 
-        .beaker-container {
-            position: relative; width: 250px; height: 300px;
-            display: flex; justify-content: center; align-items: flex-end;
-            margin-bottom: 20px;
-            flex-shrink: 0; /* Prevent squishing */
-            cursor: pointer; /* INTERACTIVE */
+        /* Tabs */
+        .lab-tabs {
+            display: flex; gap: 15px; margin-bottom: 20px;
         }
-        .beaker {
-            width: 200px; height: 250px; border: 8px solid #555; border-top: none;
-            border-radius: 0 0 20px 20px; background: rgba(255,255,255,0.3);
-            position: relative; overflow: hidden;
+        .tab {
+            padding: 10px 20px; border: none; background: #eee; border-radius: 20px;
+            font-size: 1.2rem; cursor: pointer; opacity: 0.6; transition: all 0.2s;
+            font-family: inherit; font-weight: bold;
         }
-        .beaker::before { /* Rim */
-            content: ''; position: absolute; top: -5px; left: -10px; right: -10px; height: 10px;
-            border: 8px solid #555; border-radius: 10px;
+        .tab.active {
+            background: var(--primary-color); color: white; opacity: 1; transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Views */
+        #physical-view, #chemical-view {
+            width: 100%; display: flex; flex-direction: column; align-items: center;
+        }
+
+        /* Microscope View */
+        .microscope-frame {
+            width: 280px; height: 280px; border: 15px solid #333; border-radius: 50%;
+            background: #fff; position: relative; overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); display: flex; justify-content: center; align-items: center;
+            background: radial-gradient(circle, #fff, #f0f0f0);
         }
         
-        .substance {
-            position: absolute; bottom: 0; left: 0; width: 100%; height: 0%;
-            transition: all 1s ease; display: flex; justify-content: center; align-items: center;
-            font-size: 4rem; overflow: hidden; /* For particles */
-        }
-        
-        /* Particle Styles */
         .particle {
-            position: absolute; width: 12px; height: 12px; 
-            background: rgba(255,255,255,0.8); border-radius: 50%;
-            transition: top 0.5s, left 0.5s, transform 0.2s;
-            box-shadow: 0 0 5px rgba(255,255,255,0.5);
+            width: 25px; height: 25px; background: #2196F3; border-radius: 50%;
+            position: absolute; box-shadow: inset -5px -5px 10px rgba(0,0,0,0.2);
+            transition: background 0.5s;
         }
-
-        .state-solid { height: 40%; background: #E1F5FE; align-items: center; } 
-        /* .state-solid::after { content: '🧊'; opacity: 0.2; position:absolute; } */
         
-        .state-liquid { height: 60%; background: #2196F3; opacity: 0.8; align-items: flex-end; padding-bottom: 20px; }
-        /* .state-liquid::after { content: '💧'; animation: float 2s infinite ease-in-out; opacity: 0.2; position:absolute;} */
+        /* Particle Animations handled by JS for cleaner control */
 
-        .state-gas { height: 100%; background: transparent; align-items: flex-start; padding-top: 40px; }
+        .big-icon {
+            font-size: 5rem; margin: 15px 0;
+            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.2));
+        }
+
+        /* Slider */
+        .slider-container {
+            width: 80%; max-width: 400px; background: white; padding: 20px;
+            border-radius: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: flex; flex-direction: column; align-items: center;
+        }
         
-        .gas-cloud {
-            position: absolute; font-size: 5rem; opacity: 0.6;
-            animation: rise-expand 2.5s infinite linear;
-            left: 50%; transform: translateX(-50%);
+        input[type=range] {
+            -webkit-appearance: none; width: 100%; height: 15px; border-radius: 10px;
+            background: linear-gradient(to right, #2196F3, #FF9800, #F44336); outline: none;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none; appearance: none; width: 35px; height: 35px;
+            border-radius: 50%; background: #fff; cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3); border: 4px solid #555;
         }
 
-        @keyframes rise-expand { 
-            0% { bottom: -20px; transform: translateX(-50%) scale(1); opacity: 0; } 
-            50% { opacity: 1; } 
-            100% { bottom: 100%; transform: translateX(-50%) scale(1.5); opacity: 0; } 
+        .slider-labels {
+            display: flex; justify-content: space-between; width: 100%; margin-top: 10px;
+            font-weight: bold; color: #555;
         }
 
-        /* Shake animation for ice click */
-        .shake-anim { animation: shake 0.5s; }
-        @keyframes shake { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-5deg); } 75% { transform: rotate(5deg); } }
-
-        .burner {
-            width: 200px; height: 20px; background: #333; margin-top: 5px; border-radius: 5px;
-            position: relative; display: flex; justify-content: center;
+        /* Match View */
+        .match-container {
+            width: 300px; height: 300px; background: #FFF3E0; border-radius: 20px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            border: 4px dashed #FF9800; margin-bottom: 20px;
         }
-        .flame {
-            font-size: 3rem; position: absolute; top: 10px; opacity: 0; transition: opacity 0.5s;
-        }
-        .flame.active { opacity: 1; animation: pulse 0.5s infinite alternate; }
-
-        .controls-area {
-            display: flex; gap: 20px; align-items: center; background: white;
-            padding: 15px; border-radius: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            margin-top: 20px; flex-shrink: 0;
-        }
-
-        .temp-btn {
-            width: 60px; height: 60px; border-radius: 50%; border: none; font-size: 2rem;
-            cursor: pointer; transition: transform 0.1s; box-shadow: 0 4px 0 rgba(0,0,0,0.2);
-        }
-        .btn-heat { background: #FF5722; color: white; }
-        .btn-cool { background: #2196F3; color: white; }
-        .temp-btn:active { transform: translateY(4px); box-shadow: none; }
         
-        .btn-mix { background: #9C27B0; color: white; font-size: 1.5rem; width: auto; padding: 0 20px; border-radius: 30px; height: 50px; }
-
-        .thermometer-container {
-            width: 20px; height: 200px; background: #eee; border-radius: 10px;
-            position: absolute; right: -50px; bottom: 0; border: 2px solid #999;
-            overflow: hidden;
-        }
-        .mercury {
-            width: 100%; height: 20%; background: #F44336;
-            position: absolute; bottom: 0; transition: height 1s;
-        }
-
-        .chemical-area {
-            margin-top: 30px; display: flex; align-items: center; gap: 15px;
-            background: #FFF3E0; padding: 10px 20px; border-radius: 15px; border: 2px dashed #FF9800;
-            flex-shrink: 0;
-        }
-
-        /* --- Explanation Cards (New) --- */
-        .explanation-container {
-            margin-top: 30px;
-            width: 90%;
-            max-width: 600px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            padding-bottom: 20px;
-        }
-
-        .expl-card {
-            background: white;
-            padding: 15px;
-            border-radius: 15px;
-            border-left: 6px solid #ccc;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            transition: all 0.3s;
-            opacity: 0.6;
-            text-align: left;
-        }
-
-        .expl-card.active {
-            opacity: 1;
-            transform: scale(1.02);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-        }
-
-        .expl-card h3 { margin: 0 0 5px 0; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; }
-        .expl-card p { margin: 0; font-size: 1rem; color: #555; line-height: 1.4; }
-
-        /* Specific colors */
-        .expl-card.solid.active { border-left-color: #2196F3; background: #E3F2FD; }
-        .expl-card.liquid.active { border-left-color: #FF9800; background: #FFF3E0; }
-        .expl-card.gas.active { border-left-color: #F44336; background: #FFEBEE; }
-
     </style>
 </head>
 <body>
@@ -500,55 +433,51 @@
                 </div>
             </div>
 
-            <!-- === EXPERIMENT 2: STATES OF MATTER === -->
+            <!-- === EXPERIMENT 2: STATES OF MATTER (REDESIGNED) === -->
             <div id="matter-stage">
-                <div class="beaker-container" onclick="interactMatter()">
-                    <div class="beaker">
-                        <div class="substance state-solid" id="matter-substance">
-                            <!-- Particles injected via JS -->
+                
+                <div class="lab-tabs">
+                    <button id="tab-water" class="tab active" onclick="switchMatterTab('water')">💧 Water Lab</button>
+                    <button id="tab-fire" class="tab" onclick="switchMatterTab('fire')">🔥 Fire Lab</button>
+                </div>
+
+                <!-- VIEW 1: PHYSICAL CHANGE (SLIDER) -->
+                <div id="physical-view">
+                    <div class="microscope-frame">
+                        <div id="particle-container" style="position:relative; width:100%; height:100%;">
+                            <!-- Particles injected here -->
                         </div>
                     </div>
-                    <div class="burner">
-                        <div class="flame" id="matter-flame">🔥</div>
-                    </div>
-                    <div class="thermometer-container">
-                        <div class="mercury" id="matter-mercury"></div>
+                    
+                    <div class="big-icon" id="matter-icon">🧊</div>
+                    <div style="font-size: 1.5rem; font-weight: bold; color: #333; margin-bottom: 10px;" id="matter-label">Solid Ice</div>
+
+                    <div class="slider-container">
+                        <input type="range" min="0" max="2" step="1" value="0" id="temp-slider" oninput="handleSlider(this.value)">
+                        <div class="slider-labels">
+                            <span style="color:#2196F3">❄️ Cold</span>
+                            <span style="color:#FF9800">💧 Warm</span>
+                            <span style="color:#F44336">🔥 Hot</span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="controls-area">
-                    <button class="temp-btn btn-cool" onclick="changeTemp(-1)">❄️</button>
-                    <div style="text-align:center; width: 120px;">
-                        <div style="font-weight:bold; color:#555;">Temperature</div>
-                        <div id="temp-display" style="font-size:1.5rem;">Freezing</div>
+                <!-- VIEW 2: CHEMICAL CHANGE (MATCH) -->
+                <div id="chemical-view" style="display:none;">
+                    <div class="match-container">
+                        <div style="font-size: 6rem; transition: all 0.5s;" id="match-icon">📍</div>
+                        <div style="margin-top:20px; font-weight:bold; color:#d84315;" id="match-status">Wood Match</div>
                     </div>
-                    <button class="temp-btn btn-heat" onclick="changeTemp(1)">🔥</button>
-                </div>
-                
-                <!-- Fun Extra: Food Color -->
-                <button class="temp-btn btn-mix" style="margin-top:10px; background:#9C27B0;" onclick="dropColor()">🎨 Drop Color</button>
-
-                <!-- Detailed Explanation Cards -->
-                <div class="explanation-container">
-                    <div class="expl-card solid" id="expl-solid">
-                        <h3>🧊 Solid (Ice)</h3>
-                        <p>Brr! Click the ice to hear it CLINK! The particles are shivering in place because they are cold.</p>
-                    </div>
-                    <div class="expl-card liquid" id="expl-liquid">
-                        <h3>💧 Liquid (Water)</h3>
-                        <p>Splash! Click the water! The particles are sliding around like they are in a swimming pool.</p>
-                    </div>
-                    <div class="expl-card gas" id="expl-gas">
-                        <h3>☁️ Gas (Steam)</h3>
-                        <p>Whoosh! Click the beaker to catch steam! The particles are flying away super fast.</p>
-                    </div>
+                    
+                    <button class="enter-btn" style="margin-top:0; font-size: 1.2rem; padding: 15px 40px;" onclick="burnMatch()">
+                        🔥 Burn it!
+                    </button>
+                    
+                    <button id="undo-btn" class="enter-btn" style="margin-top:15px; font-size: 1.2rem; padding: 15px 40px; background:#ccc; color:white; display:none;" onclick="tryUndo()">
+                        ↩️ Undo?
+                    </button>
                 </div>
 
-                <!-- Chemical Change Demo -->
-                <div class="chemical-area">
-                    <div style="font-size:2rem;" id="match-icon">📍</div>
-                    <button class="guess-btn" style="background:#333; color:white; padding:5px 15px; font-size:1rem; width:auto; margin:0;" onclick="burnMatch()">Burn Match</button>
-                </div>
             </div>
             
             <!-- Result/Hypothesis Popups (SinkFloat Only) -->
@@ -944,191 +873,195 @@
 
 
         // ==========================================
-        //       EXPERIMENT 2: STATES OF MATTER
+        //       EXPERIMENT 2: STATES OF MATTER (SIMPLE)
         // ==========================================
         
-        let matterTemp = 0; // 0 (Solid) to 2 (Gas)
-        let particles = [];
+        let matterParticles = [];
+        let matterTimer = null;
+        let currentTemp = 0; // 0=Ice, 1=Water, 2=Steam
 
         function initMatter() {
-            // UI Setup
+            // UI Toggle
             document.getElementById('sinkfloat-stage').style.display = 'none';
             document.getElementById('matter-stage').style.display = 'flex';
             document.getElementById('sinkfloat-ui').style.display = 'none';
             document.getElementById('matter-ui').style.display = 'block';
 
-            // Reset
-            matterTemp = 0;
-            // Create particles
-            const sub = document.getElementById('matter-substance');
-            sub.innerHTML = '';
-            particles = [];
-            for(let i=0; i<9; i++) {
+            // Init Tabs
+            switchMatterTab('water');
+            
+            speak("Welcome to the Matter Lab! Slide the bar to heat up the ice particles!");
+        }
+
+        function switchMatterTab(mode) {
+            document.getElementById('tab-water').className = mode === 'water' ? 'tab active' : 'tab';
+            document.getElementById('tab-fire').className = mode === 'fire' ? 'tab active' : 'tab';
+            
+            document.getElementById('physical-view').style.display = mode === 'water' ? 'flex' : 'none';
+            document.getElementById('chemical-view').style.display = mode === 'fire' ? 'flex' : 'none';
+
+            if(mode === 'water') {
+                resetWaterExperiment();
+            } else {
+                speak("This is the Fire Lab. Burning is a Chemical Change!");
+                resetMatchExperiment();
+            }
+        }
+
+        // --- WATER LOGIC ---
+
+        function resetWaterExperiment() {
+            document.getElementById('temp-slider').value = 0;
+            handleSlider(0);
+        }
+
+        function handleSlider(val) {
+            currentTemp = parseInt(val);
+            const container = document.getElementById('particle-container');
+            const icon = document.getElementById('matter-icon');
+            const label = document.getElementById('matter-label');
+            
+            // Clear old animation loop
+            if(matterTimer) cancelAnimationFrame(matterTimer);
+            container.innerHTML = '';
+            matterParticles = [];
+
+            // Spawn Particles
+            for(let i=0; i<15; i++) {
                 let p = document.createElement('div');
                 p.className = 'particle';
-                sub.appendChild(p);
-                particles.push(p);
-            }
-            // Add gas cloud element (hidden initially)
-            const cloud = document.createElement('div');
-            cloud.className = 'gas-cloud';
-            cloud.innerText = '☁️';
-            cloud.style.display = 'none';
-            cloud.id = 'gas-cloud-anim';
-            sub.appendChild(cloud);
-
-            updateMatterVisuals(true);
-            document.getElementById('match-icon').innerText = "📍";
-            
-            speak("Welcome to the Matter Lab! See those white dots? Those are particles! Click them to see what happens!");
-        }
-
-        function changeTemp(dir) {
-            matterTemp += dir;
-            if (matterTemp < 0) matterTemp = 0;
-            if (matterTemp > 2) matterTemp = 2;
-            updateMatterVisuals(false);
-        }
-
-        // Fun Interaction Handler
-        window.interactMatter = function() {
-            const sub = document.getElementById('matter-substance');
-            if (matterTemp === 0) {
-                // Ice Shake
-                sub.parentElement.classList.remove('shake-anim');
-                void sub.parentElement.offsetWidth; // trigger reflow
-                sub.parentElement.classList.add('shake-anim');
-                speak("Clink! Clink! It is hard ice!");
-            } else if (matterTemp === 1) {
-                // Water Splash
-                speak("Splish Splash! Wet water!");
-                // Simple ripple effect visual hack
-                sub.style.opacity = 0.5;
-                setTimeout(() => sub.style.opacity = 0.8, 200);
-            } else if (matterTemp === 2) {
-                // Gas Whoosh
-                speak("Whoosh! Catch the steam!");
-            }
-        }
-
-        // Food Color Feature
-        window.dropColor = function() {
-            if(matterTemp !== 1) {
-                speak("We need Liquid water to mix the color! Melt the ice first.");
-                return;
-            }
-            
-            const sub = document.getElementById('matter-substance');
-            const drop = document.createElement('div');
-            drop.style.position = 'absolute';
-            drop.style.width = '20px'; drop.style.height = '20px';
-            drop.style.borderRadius = '50%'; drop.style.background = '#9C27B0';
-            drop.style.top = '-50px'; drop.style.left = '50%';
-            drop.style.transition = 'top 0.5s ease-in';
-            sub.appendChild(drop);
-            
-            setTimeout(() => {
-                drop.style.top = '50%';
-            }, 50);
-
-            setTimeout(() => {
-                // Spread color
-                drop.style.transition = 'all 1s';
-                drop.style.transform = 'scale(10)';
-                drop.style.opacity = 0;
-                sub.style.backgroundColor = '#9C27B0'; // Tint water
-                speak("Look! The color particles spread out and mix with the water particles!");
-            }, 600);
-        }
-
-        function updateMatterVisuals(silent) {
-            const sub = document.getElementById('matter-substance');
-            const merc = document.getElementById('matter-mercury');
-            const flame = document.getElementById('matter-flame');
-            const disp = document.getElementById('temp-display');
-            const cloud = document.getElementById('gas-cloud-anim');
-
-            // Reset Classes
-            sub.className = 'substance';
-            sub.style.backgroundColor = ''; // Reset color from dye
-            flame.classList.remove('active');
-            cloud.style.display = 'none';
-            
-            // Remove highlighting
-            document.querySelectorAll('.expl-card').forEach(c => c.classList.remove('active'));
-
-            if (matterTemp === 0) {
-                // SOLID
-                sub.classList.add('state-solid');
-                merc.style.height = '20%';
-                merc.style.background = '#2196F3';
-                disp.innerText = "Solid (Ice)";
-                document.getElementById('expl-solid').classList.add('active');
+                container.appendChild(p);
+                // Randomize slight appearance
+                p.style.backgroundColor = currentTemp === 2 ? '#B3E5FC' : '#2196F3';
                 
-                // Align particles in Grid (Solid Structure)
-                particles.forEach((p, i) => {
-                    p.style.left = (30 + (i%3)*20) + '%';
-                    p.style.top = (20 + Math.floor(i/3)*20) + '%';
-                    p.style.animation = 'none'; // No big movement
-                    // Tiny vibration
-                    p.style.transform = 'translate(0,0)';
+                matterParticles.push({
+                    el: p,
+                    x: Math.random() * 250,
+                    y: Math.random() * 250,
+                    vx: 0, vy: 0,
+                    baseX: 0, baseY: 0 // Target for solid
                 });
-
-                if(!silent) speak("Freezing! Particles hold hands tightly in a grid. Click the ice!");
-            
-            } else if (matterTemp === 1) {
-                // LIQUID
-                sub.classList.add('state-liquid');
-                merc.style.height = '50%';
-                merc.style.background = '#FF9800';
-                flame.classList.add('active'); 
-                disp.innerText = "Liquid (Water)";
-                document.getElementById('expl-liquid').classList.add('active');
-
-                // Random particles at bottom (Liquid)
-                particles.forEach((p) => {
-                    p.style.left = (Math.random() * 80 + 10) + '%';
-                    p.style.top = (Math.random() * 60 + 30) + '%';
-                    p.style.animation = 'none'; 
-                });
-
-                if(!silent) speak("Melting! Particles slide around. Add some color to see them move!");
-
-            } else if (matterTemp === 2) {
-                // GAS
-                sub.classList.add('state-gas');
-                merc.style.height = '90%';
-                merc.style.background = '#F44336';
-                flame.classList.add('active');
-                disp.innerText = "Gas (Steam)";
-                cloud.style.display = 'block'; // Show steam cloud
-                document.getElementById('expl-gas').classList.add('active');
-
-                // Particles fly everywhere
-                particles.forEach((p) => {
-                    p.style.left = (Math.random() * 100) + '%';
-                    p.style.top = (Math.random() * 100) + '%';
-                });
-
-                if(!silent) speak("Boiling! Particles fly apart! Click to catch them!");
             }
+
+            // Setup State
+            if(currentTemp === 0) {
+                // SOLID (ICE)
+                icon.innerText = "🧊";
+                label.innerText = "Solid Ice";
+                label.style.color = "#2196F3";
+                speak("Brrr! The particles are cold and huddled together. They vibrate but don't move.");
+                
+                // Arrange in Grid
+                let idx = 0;
+                for(let r=0; r<4; r++) {
+                    for(let c=0; c<4; c++) {
+                        if(idx < matterParticles.length) {
+                            matterParticles[idx].baseX = 80 + c * 30;
+                            matterParticles[idx].baseY = 80 + r * 30;
+                            idx++;
+                        }
+                    }
+                }
+            } else if(currentTemp === 1) {
+                // LIQUID (WATER)
+                icon.innerText = "💧";
+                label.innerText = "Liquid Water";
+                label.style.color = "#FF9800";
+                speak("Melting! Heat gives particles energy to dance and slide around the bottom.");
+            } else {
+                // GAS (STEAM)
+                icon.innerText = "☁️";
+                label.innerText = "Gas (Steam)";
+                label.style.color = "#F44336";
+                speak("Boiling! Particles are super hot and fast! They fly apart everywhere!");
+            }
+
+            animateParticles();
+        }
+
+        function animateParticles() {
+            matterParticles.forEach(p => {
+                if (currentTemp === 0) {
+                    // SOLID: Jitter around base
+                    p.x = p.baseX + (Math.random() - 0.5) * 4;
+                    p.y = p.baseY + (Math.random() - 0.5) * 4;
+                } 
+                else if (currentTemp === 1) {
+                    // LIQUID: Flow at bottom
+                    p.vx += (Math.random() - 0.5) * 1;
+                    p.vy += (Math.random() - 0.5) * 1;
+                    p.vx *= 0.9; p.vy *= 0.9; // Friction
+                    p.vy += 0.2; // Gravity
+                    
+                    p.x += p.vx;
+                    p.y += p.vy;
+
+                    // Bounds (Bottom only)
+                    if(p.y > 250) { p.y = 250; p.vy *= -0.5; }
+                    if(p.x < 10 || p.x > 250) p.vx *= -1;
+                    // Keep roughly together
+                    if(p.y < 150) p.vy += 0.5; 
+                } 
+                else {
+                    // GAS: Fly everywhere
+                    p.vx += (Math.random() - 0.5) * 2;
+                    p.vy += (Math.random() - 0.5) * 2;
+                    // Speed limit
+                    if(p.vx > 8) p.vx = 8;
+                    if(p.vy > 8) p.vy = 8;
+                    
+                    p.x += p.vx;
+                    p.y += p.vy;
+
+                    // Bounce off walls
+                    if(p.x < 0 || p.x > 255) p.vx *= -1;
+                    if(p.y < 0 || p.y > 255) p.vy *= -1;
+                }
+
+                p.el.style.left = p.x + 'px';
+                p.el.style.top = p.y + 'px';
+            });
+            matterTimer = requestAnimationFrame(animateParticles);
+        }
+
+        // --- MATCH LOGIC ---
+        function resetMatchExperiment() {
+            const icon = document.getElementById('match-icon');
+            const status = document.getElementById('match-status');
+            const undo = document.getElementById('undo-btn');
+            
+            icon.innerText = "📍";
+            status.innerText = "Wood Match";
+            status.style.color = "#d84315";
+            undo.style.display = "none";
         }
 
         window.burnMatch = function() {
             const icon = document.getElementById('match-icon');
+            const status = document.getElementById('match-status');
+            
             if (icon.innerText === "📍") {
                 icon.innerText = "🔥";
-                speak("Burning! Fire changes the wood into something new.", () => {
-                    setTimeout(() => {
-                        icon.innerText = "⚫"; // Ash
-                        speak("Now it is Ash. Can we turn Ash back into a match? No! That is a Chemical Change. It is changed forever.");
-                    }, 500);
+                speak("Fire uses heat to change the wood!", () => {
+                   setTimeout(() => {
+                       icon.innerText = "⚫"; 
+                       status.innerText = "Ash (Burnt)";
+                       status.style.color = "#333";
+                       document.getElementById('undo-btn').style.display = "inline-block";
+                       speak("Now it is Ash. It is changed forever!");
+                   }, 2000); 
                 });
-            } else {
-                speak("It is already burnt! Chemical changes cannot be undone.");
             }
         }
 
+        window.tryUndo = function() {
+            speak("We cannot turn ash back into wood! Chemical changes are permanent.");
+            // Shake effect
+            const btn = document.getElementById('undo-btn');
+            btn.style.transform = "translateX(10px)";
+            setTimeout(() => btn.style.transform = "translateX(-10px)", 100);
+            setTimeout(() => btn.style.transform = "translateX(0)", 200);
+        }
 
         // --- UTILS ---
         let voices = [];
