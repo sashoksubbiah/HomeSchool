@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📚 Story Kingdom - JuniorLab</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #ee0979 0%, #ff6a00 50%, #ff8c00 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        .header {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.8rem;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .home-btn {
+            background: #fff;
+            color: #ee0979;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 800;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .home-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-title h1 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 3rem;
+            text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .page-title p {
+            font-size: 1.3rem;
+            margin-top: 10px;
+            opacity: 0.9;
+        }
+
+        .activity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .activity-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 30px;
+            text-align: center;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .activity-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .activity-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+        }
+
+        .activity-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.5rem;
+            color: #ee0979;
+            margin-bottom: 10px;
+        }
+
+        .activity-desc {
+            color: #666;
+        }
+
+        .game-box {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            padding: 40px;
+            color: #333;
+            display: none;
+        }
+
+        .game-box.active {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .game-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2rem;
+            color: #ee0979;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .back-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: #fff;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-family: 'Fredoka One', cursive;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .story-structure {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin: 30px 0;
+        }
+
+        .story-part {
+            background: linear-gradient(145deg, #fce4ec, #f8bbd9);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            min-width: 180px;
+        }
+
+        .story-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .story-label {
+            font-family: 'Fredoka One', cursive;
+            color: #c2185b;
+            font-size: 1.3rem;
+        }
+
+        .flip-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .flip-container {
+            perspective: 1000px;
+            height: 200px;
+            cursor: pointer;
+        }
+
+        .flip-card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+        }
+
+        .flip-container.flipped .flip-card {
+            transform: rotateY(180deg);
+        }
+
+        .flip-front,
+        .flip-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .flip-front {
+            background: linear-gradient(145deg, #ee0979, #ff6a00);
+            color: #fff;
+        }
+
+        .flip-back {
+            background: #fff;
+            color: #333;
+            transform: rotateY(180deg);
+            border: 3px solid #ee0979;
+        }
+
+        .flip-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .flip-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.2rem;
+        }
+
+        .fable-card {
+            background: linear-gradient(145deg, #fff3e0, #ffe0b2);
+            border-radius: 20px;
+            padding: 25px;
+            margin: 15px 0;
+        }
+
+        .fable-title {
+            font-family: 'Fredoka One', cursive;
+            color: #e65100;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .fable-moral {
+            background: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #ff6a00;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        .rhyme-game {
+            text-align: center;
+            padding: 30px;
+            background: #fce4ec;
+            border-radius: 20px;
+            margin: 20px 0;
+        }
+
+        .rhyme-word {
+            font-family: 'Fredoka One', cursive;
+            font-size: 3rem;
+            color: #c2185b;
+            margin-bottom: 20px;
+        }
+
+        .rhyme-options {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .rhyme-btn {
+            padding: 15px 30px;
+            background: #fff;
+            border: 3px solid #ee0979;
+            border-radius: 50px;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #ee0979;
+        }
+
+        .rhyme-btn:hover {
+            background: #ee0979;
+            color: #fff;
+        }
+
+        .rhyme-btn.correct {
+            background: #4CAF50;
+            color: #fff;
+            border-color: #4CAF50;
+        }
+
+        .rhyme-btn.wrong {
+            background: #f44336;
+            color: #fff;
+            border-color: #f44336;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: linear-gradient(45deg, #ee0979, #ff6a00);
+            color: #fff;
+            padding: 20px 40px;
+            border-radius: 50px;
+            font-weight: 700;
+            z-index: 9999;
+            opacity: 0;
+            transition: all 0.4s;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <a href="../" class="logo">📚 Story Kingdom</a>
+        <a href="../" class="home-btn">🏠 Home</a>
+    </header>
+    <div class="container">
+        <div id="menu">
+            <div class="page-title">
+                <h1>📚 Story Kingdom 🏰</h1>
+                <p>Explore magical worlds of stories and poems!</p>
+            </div>
+            <div class="activity-grid">
+                <div class="activity-card" onclick="showGame('structure')">
+                    <div class="activity-icon">📖</div>
+                    <h3 class="activity-title">Story Parts</h3>
+                    <p class="activity-desc">Beginning, middle, end!</p>
+                </div>
+                <div class="activity-card" onclick="showGame('characters')">
+                    <div class="activity-icon">🦸🦹</div>
+                    <h3 class="activity-title">Character Types</h3>
+                    <p class="activity-desc">Heroes, villains & more!</p>
+                </div>
+                <div class="activity-card" onclick="showGame('fables')">
+                    <div class="activity-icon">🐢🐇</div>
+                    <h3 class="activity-title">Fables</h3>
+                    <p class="activity-desc">Stories with lessons!</p>
+                </div>
+                <div class="activity-card" onclick="showGame('poetry')">
+                    <div class="activity-icon">🎵✨</div>
+                    <h3 class="activity-title">Rhyme Time</h3>
+                    <p class="activity-desc">Find the rhyming words!</p>
+                </div>
+            </div>
+        </div>
+        <div id="structure" class="game-box">
+            <button class="back-btn" onclick="showMenu()">← Back</button>
+            <h2 class="game-title">📖 Story Structure</h2>
+            <p style="text-align:center;margin-bottom:20px;">Every story has 3 parts!</p>
+            <div class="story-structure">
+                <div class="story-part">
+                    <div class="story-icon">🌅</div>
+                    <div class="story-label">BEGINNING</div>
+                    <p style="margin-top:10px;color:#666;">Meet the characters</p>
+                </div>
+                <div style="align-self:center;font-size:2rem;">→</div>
+                <div class="story-part">
+                    <div class="story-icon">⚡</div>
+                    <div class="story-label">MIDDLE</div>
+                    <p style="margin-top:10px;color:#666;">Problem happens!</p>
+                </div>
+                <div style="align-self:center;font-size:2rem;">→</div>
+                <div class="story-part">
+                    <div class="story-icon">🌈</div>
+                    <div class="story-label">END</div>
+                    <p style="margin-top:10px;color:#666;">Problem solved!</p>
+                </div>
+            </div>
+            <div style="background:#fce4ec;padding:25px;border-radius:20px;margin-top:20px;">
+                <h4 style="color:#c2185b;margin-bottom:10px;">🐷 Example: The Three Little Pigs</h4>
+                <p><b>Beginning:</b> 3 pigs build houses</p>
+                <p><b>Middle:</b> Big Bad Wolf tries to blow them down!</p>
+                <p><b>End:</b> Brick house stands strong, wolf runs away!</p>
+            </div>
+        </div>
+        <div id="characters" class="game-box">
+            <button class="back-btn" onclick="showMenu()">← Back</button>
+            <h2 class="game-title">🦸 Character Types 🦹</h2>
+            <p style="text-align:center;margin-bottom:20px;">Click the cards to learn about story characters!</p>
+            <div class="flip-grid">
+                <div class="flip-container" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card">
+                        <div class="flip-front">
+                            <div class="flip-icon">🦸</div>
+                            <div class="flip-title">HERO</div>
+                        </div>
+                        <div class="flip-back">
+                            <p>The good guy! Saves the day! 💪</p>
+                            <p style="margin-top:10px;color:#ee0979;">Examples: Superman, Cinderella</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flip-container" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card">
+                        <div class="flip-front">
+                            <div class="flip-icon">🦹</div>
+                            <div class="flip-title">VILLAIN</div>
+                        </div>
+                        <div class="flip-back">
+                            <p>The bad guy! Causes trouble! 😈</p>
+                            <p style="margin-top:10px;color:#ee0979;">Examples: Big Bad Wolf</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flip-container" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card">
+                        <div class="flip-front">
+                            <div class="flip-icon">🐕</div>
+                            <div class="flip-title">SIDEKICK</div>
+                        </div>
+                        <div class="flip-back">
+                            <p>Hero's best friend & helper! 🤝</p>
+                            <p style="margin-top:10px;color:#ee0979;">Examples: Robin, Donkey</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flip-container" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card">
+                        <div class="flip-front">
+                            <div class="flip-icon">🧙</div>
+                            <div class="flip-title">MENTOR</div>
+                        </div>
+                        <div class="flip-back">
+                            <p>Wise teacher who helps hero! 📚</p>
+                            <p style="margin-top:10px;color:#ee0979;">Examples: Fairy Godmother</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="fables" class="game-box">
+            <button class="back-btn" onclick="showMenu()">← Back</button>
+            <h2 class="game-title">🐢 Fables & Lessons 🐇</h2>
+            <p style="text-align:center;margin-bottom:20px;">Fables are short stories that teach us important lessons!
+            </p>
+            <div class="fable-card">
+                <div class="fable-title">🐢 The Tortoise and the Hare 🐇</div>
+                <p>A slow tortoise races a fast hare. The hare is so confident he takes a nap. The tortoise keeps going
+                    and WINS!</p>
+                <div class="fable-moral">💡 <b>Lesson:</b> Slow and steady wins the race!</div>
+            </div>
+            <div class="fable-card">
+                <div class="fable-title">🦁 The Lion and the Mouse 🐭</div>
+                <p>A lion lets a tiny mouse go. Later, the mouse saves the lion from a trap by chewing the ropes!</p>
+                <div class="fable-moral">💡 <b>Lesson:</b> Little friends can be big helpers!</div>
+            </div>
+            <div class="fable-card">
+                <div class="fable-title">🐜 The Ant and the Grasshopper 🦗</div>
+                <p>Ant works hard all summer saving food. Grasshopper plays. When winter comes, ant is prepared!</p>
+                <div class="fable-moral">💡 <b>Lesson:</b> Plan ahead and work hard!</div>
+            </div>
+        </div>
+        <div id="poetry" class="game-box">
+            <button class="back-btn" onclick="showMenu()">← Back</button>
+            <h2 class="game-title">🎵 Rhyme Time! ✨</h2>
+            <p style="text-align:center;margin-bottom:20px;">Words that RHYME sound the same at the end!</p>
+            <div class="rhyme-game">
+                <p>What rhymes with...</p>
+                <div class="rhyme-word">⭐ STAR</div>
+                <div class="rhyme-options">
+                    <button class="rhyme-btn" onclick="checkRhyme(this, true)">🚗 CAR</button>
+                    <button class="rhyme-btn" onclick="checkRhyme(this, false)">🌙 MOON</button>
+                    <button class="rhyme-btn" onclick="checkRhyme(this, false)">🐈 CAT</button>
+                </div>
+            </div>
+            <h3 style="color:#ee0979;margin:30px 0 15px;">More Rhyming Pairs:</h3>
+            <div style="display:flex;gap:20px;flex-wrap:wrap;justify-content:center;">
+                <div class="story-part">
+                    <div class="story-icon">🐱🎩</div>
+                    <div>Cat - Hat</div>
+                </div>
+                <div class="story-part">
+                    <div class="story-icon">🐶🪵</div>
+                    <div>Dog - Log</div>
+                </div>
+                <div class="story-part">
+                    <div class="story-icon">🐝🌳</div>
+                    <div>Bee - Tree</div>
+                </div>
+                <div class="story-part">
+                    <div class="story-icon">🐸🪵</div>
+                    <div>Frog - Fog</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="toast" class="toast"></div>
+    <script>
+        function showMenu() { document.querySelectorAll('.game-box').forEach(g => g.classList.remove('active')); document.getElementById('menu').style.display = 'block'; }
+        function showGame(id) { document.getElementById('menu').style.display = 'none'; document.querySelectorAll('.game-box').forEach(g => g.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+        function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2500); }
+        function checkRhyme(btn, correct) {
+            if (correct) { btn.classList.add('correct'); showToast('🎉 YES! Star and Car rhyme!'); }
+            else { btn.classList.add('wrong'); showToast('❌ Try again! That doesn\'t rhyme with star!'); }
+        }
+    </script>
+</body>
+
+</html>
