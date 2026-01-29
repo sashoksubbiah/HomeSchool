@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🦸 Hero Academy - JuniorLab</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #a855f7 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        .header {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.8rem;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .home-btn {
+            background: #fff;
+            color: #667eea;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 800;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .home-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-title h1 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 3rem;
+            text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .activity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .activity-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 30px;
+            text-align: center;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .activity-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .activity-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+        }
+
+        .activity-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.5rem;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .game-box {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            padding: 40px;
+            color: #333;
+            display: none;
+        }
+
+        .game-box.active {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .game-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2rem;
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .back-btn {
+            background: linear-gradient(45deg, #ff6b9d, #ffa64d);
+            color: #fff;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-family: 'Fredoka One', cursive;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .helper-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+        }
+
+        .helper-card {
+            background: linear-gradient(145deg, #ede7f6, #d1c4e9);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .helper-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .helper-icon {
+            font-size: 4rem;
+            margin-bottom: 10px;
+        }
+
+        .helper-title {
+            font-family: 'Fredoka One', cursive;
+            color: #5e35b1;
+            font-size: 1.1rem;
+        }
+
+        .scenario-card {
+            background: linear-gradient(145deg, #e8eaf6, #c5cae9);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 15px 0;
+        }
+
+        .scenario-title {
+            font-family: 'Fredoka One', cursive;
+            color: #3949ab;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+
+        .scenario-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .scenario-btn {
+            padding: 15px 25px;
+            background: #fff;
+            border: 3px solid #667eea;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #667eea;
+        }
+
+        .scenario-btn:hover {
+            background: #667eea;
+            color: #fff;
+        }
+
+        .scenario-btn.selected {
+            background: #4CAF50;
+            color: #fff;
+            border-color: #4CAF50;
+        }
+
+        .rules-section {
+            background: linear-gradient(145deg, #fff3e0, #ffe0b2);
+            border-radius: 20px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .rules-title {
+            font-family: 'Fredoka One', cursive;
+            color: #e65100;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+
+        .rule-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .rule-icon {
+            font-size: 2rem;
+        }
+
+        .checklist {
+            margin-top: 20px;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: #fff;
+            border-radius: 15px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .check-item:hover {
+            transform: translateX(5px);
+        }
+
+        .check-item.checked {
+            background: linear-gradient(145deg, #c8e6c9, #a5d6a7);
+        }
+
+        .checkbox {
+            width: 30px;
+            height: 30px;
+            border: 3px solid #667eea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .check-item.checked .checkbox {
+            background: #4CAF50;
+            border-color: #4CAF50;
+            color: #fff;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: #fff;
+            padding: 20px 40px;
+            border-radius: 50px;
+            font-weight: 700;
+            z-index: 9999;
+            opacity: 0;
+            transition: all 0.4s;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <a href="../" class="logo">🦸 Hero Academy</a>
+        <a href="../" class="home-btn">🏠 Home</a>
+    </header>
+    <div class="container">
+        <div id="menu">
+            <div class="page-title">
+                <h1>🦸 Hero Academy 🏆</h1>
+                <p>Learn to be a community superhero!</p>
+            </div>
+            <div class="activity-grid">
+                <div class="activity-card" onclick="showGame('helpers')">
+                    <div class="activity-icon">👮👩‍🚒👩‍⚕️</div>
+                    <h3 class="activity-title">Community Helpers</h3>
+                    <p>People who help our community!</p>
+                </div>
+                <div class="activity-card" onclick="showGame('empathy')">
+                    <div class="activity-icon">💝🤗</div>
+                    <h3 class="activity-title">Empathy</h3>
+                    <p>Understand how others feel!</p>
+                </div>
+                <div class="activity-card" onclick="showGame('rules')">
+                    <div class="activity-icon">📋✅</div>
+                    <h3 class="activity-title">Rules & Responsibility</h3>
+                    <p>Why rules matter!</p>
+                </div>
+            </div>
+        </div>
+        <div id="helpers" class="game-box">
+            <button class="back-btn" onclick="showMenu()">← Back</button>
+            <h2 class="game-title">👮 Community Helpers</h2>
+            <p style="text-align:center;margin-bottom:20px;">Click each helper to learn what they do!</p>
+            <div class="helper-grid">
+                <div class="helper-card" onclick="showToast('👮 Police officers keep us SAFE and catch bad guys!')">
+                    <div class="helper-icon">👮</div>
+                    <div class="helper-title">Police Officer</div>
+                </div>
+                <div class="helper-card" onclick="showToast('👩‍🚒 Firefighters put out fires and rescue people!')">
+                    <div class="helper-icon">👩‍🚒</div>
+                    <div class="helper-title">Firefighter</div>
+                </div>
+                <div class="helper-card" onclick="showToast('👩‍⚕️ Doctors help us get better when we are sick!')">
+                    <div class="helper-icon">👩‍⚕️</div>
+                    <div class="helper-title">Doctor</div>
+                </div>
+                <div class="helper-card" onclick="showToast('👩‍🏫 Teachers help us learn and grow smart!')">
+                    <div class="helper-icon">👩‍🏫</div>
+                    <div class="helper-title">Teacher</div>
+                </div>
+                <div class="helper-card" onclick="showToast('👷 Construction workers build our homes and roads!')">
+                    <div class="helper-icon">👷</div>
+                    <div class="helper-title">Builder</div>
+                </div>
+                <div class="helper-card" onclick="showToast('👨‍🍳 Chefs cook yummy food for us to eat!')">
+                    <div class="helper-icon">👨‍🍳</div>
+                    <div class="helper-title">Chef</div>
+                </div>
+                <div class="helper-card" onclick="showToast('📬 Mail carriers bring our letters and packages!')">
+                    <div class="helper-icon">📬</div>
+                    <div class="helper-title">Mail Carrier</div>
+                </div>
+                <div class="helper-card" onclick="showToast('🧹 Janitors keep our schools and buildings clean!')">
+                    <div class="helper-icon">🧹</div>
+                    <div class="helper-title">Janitor</div>
+                </div>
+            </div>
+        </div>
+        <div id="empathy" class="game-box">
+            <button class="back-btn" onclick="showMenu()">← Back</button>
+            <h2 class="game-title">💝 Understanding Feelings</h2>
+            <p style="text-align:center;margin-bottom:20px;">Empathy means understanding how others feel. What would you
+                do?</p>
+            <div class="scenario-card">
+                <div class="scenario-title">😢 Your friend drops their ice cream and starts crying...</div>
+                <div class="scenario-options">
+                    <button class="scenario-btn" onclick="selectEmpathy(this, false)">😆 Laugh at them</button>
+                    <button class="scenario-btn" onclick="selectEmpathy(this, true)">🤗 Say "I'm sorry" and share
+                        yours</button>
+                    <button class="scenario-btn" onclick="selectEmpathy(this, false)">🚶 Walk away</button>
+                </div>
+            </div>
+            <div class="scenario-card">
+                <div class="scenario-title">😔 A new kid at school is sitting alone at lunch...</div>
+                <div class="scenario-options">
+                    <button class="scenario-btn" onclick="selectEmpathy(this, false)">🙈 Ignore them</button>
+                    <button class="scenario-btn" onclick="selectEmpathy(this, true)">👋 Ask them to sit with
+                        you!</button>
+                    <button class="scenario-btn" onclick="selectEmpathy(this, false)">🗣️ Whisper about them</button>
+                </div>
+            </div>
+            <div class="scenario-card">
+                <div class="scenario-title">😤 Someone accidentally bumps into you...</div>
+                <div class="scenario-options">
+                    <button class="scenario-btn" onclick="selectEmpathy(this, false)">😡 Get angry and yell</button>
+                    <button class="scenario-btn" onclick="selectEmpathy(this, true)">😊 Say "It's okay!"</button>
+                    <button class="scenario-btn" onclick="selectEmpathy(this, false)">👊 Push them back</button>
+                </div>
+            </div>
+        </div>
+        <div id="rules" class="game-box">
+            <button class="back-btn" onclick="showMenu()">← Back</button>
+            <h2 class="game-title">📋 Rules & Responsibility</h2>
+            <div class="rules-section">
+                <div class="rules-title">Why Do We Have Rules? 🤔</div>
+                <div class="rule-item">
+                    <div class="rule-icon">🛡️</div>
+                    <div><b>Safety</b> - Rules keep us safe from danger!</div>
+                </div>
+                <div class="rule-item">
+                    <div class="rule-icon">⚖️</div>
+                    <div><b>Fairness</b> - Rules make things fair for everyone!</div>
+                </div>
+                <div class="rule-item">
+                    <div class="rule-icon">🤝</div>
+                    <div><b>Respect</b> - Rules help us respect each other!</div>
+                </div>
+                <div class="rule-item">
+                    <div class="rule-icon">🎯</div>
+                    <div><b>Order</b> - Rules help things run smoothly!</div>
+                </div>
+            </div>
+            <h3 style="color:#667eea;margin:30px 0 15px;">✅ My Responsibilities Checklist</h3>
+            <p style="color:#666;margin-bottom:15px;">Check off what you do every day!</p>
+            <div class="checklist">
+                <div class="check-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"></div>
+                    <div>🛏️ Make my bed</div>
+                </div>
+                <div class="check-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"></div>
+                    <div>🦷 Brush my teeth</div>
+                </div>
+                <div class="check-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"></div>
+                    <div>🧹 Clean up my toys</div>
+                </div>
+                <div class="check-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"></div>
+                    <div>📚 Do my homework</div>
+                </div>
+                <div class="check-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"></div>
+                    <div>🗣️ Say please and thank you</div>
+                </div>
+                <div class="check-item" onclick="toggleCheck(this)">
+                    <div class="checkbox"></div>
+                    <div>🤝 Be kind to others</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="toast" class="toast"></div>
+    <script>
+        function showMenu() { document.querySelectorAll('.game-box').forEach(g => g.classList.remove('active')); document.getElementById('menu').style.display = 'block'; }
+        function showGame(id) { document.getElementById('menu').style.display = 'none'; document.querySelectorAll('.game-box').forEach(g => g.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+        function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000); }
+        function selectEmpathy(btn, correct) {
+            btn.parentElement.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            if (correct) showToast('💝 Great choice! That shows empathy!');
+            else showToast('🤔 Think again... How would YOU feel?');
+        }
+        function toggleCheck(el) { el.classList.toggle('checked'); const cb = el.querySelector('.checkbox'); cb.textContent = el.classList.contains('checked') ? '✓' : ''; showToast(el.classList.contains('checked') ? '✅ Great job!' : ''); }
+    </script>
+</body>
+
+</html>
