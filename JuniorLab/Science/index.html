@@ -22,7 +22,6 @@
             --text-primary: #ffffff;
             --text-muted: rgba(255, 255, 255, 0.7);
             --success: #34d399;
-            --shadow-glow: 0 0 60px rgba(6, 182, 212, 0.4);
         }
 
         * {
@@ -41,26 +40,9 @@
         body::before {
             content: '';
             position: fixed;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle at 30% 70%, rgba(6, 182, 212, 0.25) 0%, transparent 50%),
-                radial-gradient(circle at 70% 30%, rgba(244, 114, 182, 0.2) 0%, transparent 50%);
-            animation: bgFloat 25s ease-in-out infinite;
+            inset: 0;
+            background: radial-gradient(circle at 30% 70%, rgba(6, 182, 212, 0.15) 0%, transparent 50%);
             z-index: -1;
-        }
-
-        @keyframes bgFloat {
-
-            0%,
-            100% {
-                transform: translate(0, 0);
-            }
-
-            50% {
-                transform: translate(-3%, 3%);
-            }
         }
 
         .top-bar {
@@ -87,12 +69,38 @@
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             border-radius: 50px;
-            transition: all 0.4s;
+            transition: all 0.3s;
         }
 
         .back-home:hover {
             background: rgba(255, 255, 255, 0.15);
-            transform: translateX(-5px);
+        }
+
+        .progress-bar {
+            flex: 1;
+            max-width: 300px;
+            margin: 0 30px;
+        }
+
+        .progress-track {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 50px;
+            height: 12px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 50px;
+            transition: width 0.5s;
+        }
+
+        .progress-label {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-top: 5px;
         }
 
         .game-stats {
@@ -103,114 +111,164 @@
         .stat {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(251, 191, 36, 0.05));
             border: 1px solid rgba(251, 191, 36, 0.3);
-            padding: 10px 22px;
+            padding: 10px 20px;
             border-radius: 50px;
             font-weight: 700;
             color: var(--accent-gold);
         }
 
-        .audio-control {
-            position: fixed;
-            top: 90px;
-            right: 25px;
-            z-index: 100;
-            display: flex;
-            gap: 12px;
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 24px;
         }
 
-        .audio-btn {
-            padding: 14px 24px;
+        /* Topic Selection */
+        .topic-select {
+            text-align: center;
+        }
+
+        .topic-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: 3rem;
+            background: linear-gradient(135deg, #fff, var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+        }
+
+        .topic-subtitle {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+        }
+
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+        }
+
+        .topic-card {
             background: var(--glass-bg);
-            backdrop-filter: blur(15px);
+            backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
-            border-radius: 50px;
-            font-weight: 700;
-            cursor: pointer;
-            color: var(--text-primary);
-            transition: all 0.4s;
-        }
-
-        .audio-btn:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: scale(1.05);
-        }
-
-        .audio-btn.active {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            border-color: transparent;
-        }
-
-        .teacher {
-            position: fixed;
-            bottom: 25px;
-            left: 25px;
-            z-index: 1000;
-        }
-
-        .teacher-avatar {
-            font-size: 4.5rem;
-            cursor: pointer;
-            animation: teacherFloat 4s ease-in-out infinite;
-            filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.4));
-        }
-
-        @keyframes teacherFloat {
-
-            0%,
-            100% {
-                transform: translateY(0) rotate(-2deg);
-            }
-
-            50% {
-                transform: translateY(-15px) rotate(2deg);
-            }
-        }
-
-        .teacher-bubble {
-            position: absolute;
-            bottom: 100%;
-            left: 60%;
-            transform: translateX(-50%);
-            background: var(--glass-bg);
-            backdrop-filter: blur(25px);
-            border: 1px solid var(--glass-border);
-            color: var(--text-primary);
-            padding: 24px 28px;
             border-radius: 24px;
-            max-width: 360px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-            margin-bottom: 20px;
-            display: none;
-            line-height: 1.7;
+            padding: 30px;
+            cursor: pointer;
+            transition: all 0.4s;
+            text-align: center;
+            position: relative;
         }
 
-        .teacher-bubble.show {
+        .topic-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 24px 24px 0 0;
+        }
+
+        .topic-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 50px rgba(6, 182, 212, 0.3);
+        }
+
+        .topic-card.completed {
+            border-color: var(--success);
+        }
+
+        .topic-card.completed::after {
+            content: '✅';
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+        }
+
+        .topic-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
             display: block;
-            animation: bubbleSlide 0.4s;
         }
 
-        @keyframes bubbleSlide {
+        .topic-name {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.3rem;
+            color: var(--text-primary);
+        }
+
+        /* Lesson Container */
+        .lesson-container {
+            display: none;
+        }
+
+        .lesson-container.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateX(-50%) translateY(30px);
+                transform: translateY(20px);
             }
 
             to {
                 opacity: 1;
-                transform: translateX(-50%) translateY(0);
+                transform: translateY(0);
             }
         }
 
-        .teacher-bubble::after {
+        /* Teacher Character */
+        .teacher-section {
+            display: flex;
+            gap: 25px;
+            align-items: flex-start;
+            margin-bottom: 30px;
+        }
+
+        .teacher-avatar {
+            font-size: 5rem;
+            flex-shrink: 0;
+            animation: teacherBounce 2s ease-in-out infinite;
+        }
+
+        @keyframes teacherBounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .teacher-speech {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 25px 30px;
+            flex: 1;
+            position: relative;
+        }
+
+        .teacher-speech::before {
             content: '';
             position: absolute;
-            bottom: -14px;
-            left: 30%;
-            border: 8px solid transparent;
-            border-top-color: var(--glass-border);
+            left: -15px;
+            top: 30px;
+            border: 10px solid transparent;
+            border-right-color: var(--glass-border);
         }
 
         .teacher-name {
@@ -219,611 +277,427 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 10px;
-            font-size: 1.1rem;
         }
 
-        .speak-btn {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: #fff;
-            border: none;
-            padding: 10px 22px;
-            border-radius: 50px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s;
-        }
-
-        .speak-btn:hover {
-            transform: scale(1.05);
-        }
-
-        .speak-btn.speaking {
-            animation: pulse 1s infinite;
-        }
-
-        @keyframes pulse {
-
-            0%,
-            100% {
-                box-shadow: 0 6px 20px rgba(6, 182, 212, 0.4);
-            }
-
-            50% {
-                box-shadow: 0 6px 40px rgba(6, 182, 212, 0.8);
-            }
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 40px 24px;
-        }
-
-        .level-header {
-            text-align: center;
-            margin-bottom: 50px;
-        }
-
-        .level-title {
-            font-family: 'Fredoka One', cursive;
-            font-size: 3.5rem;
-            background: linear-gradient(135deg, #fff 0%, var(--primary-light) 50%, var(--accent) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 4px 30px rgba(6, 182, 212, 0.5));
-        }
-
-        .level-subtitle {
-            color: var(--text-muted);
-            margin-top: 12px;
+        .teacher-text {
+            color: var(--text-primary);
             font-size: 1.2rem;
+            line-height: 1.8;
         }
 
-        .missions-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 28px;
+        .teacher-text .highlight {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.3), rgba(251, 191, 36, 0.1));
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: 700;
+            color: var(--accent-gold);
         }
 
-        .mission-card {
+        /* Demo Area */
+        .demo-area {
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
-            border-radius: 28px;
-            padding: 32px;
-            cursor: pointer;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 24px;
+            padding: 40px;
+            margin: 30px 0;
+            text-align: center;
+            min-height: 300px;
             position: relative;
             overflow: hidden;
         }
 
-        .mission-card::before {
-            content: '';
+        .demo-title {
+            font-family: 'Fredoka One', cursive;
+            color: var(--primary-light);
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        /* Particle Animation */
+        .particle-container {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            margin: 0 auto;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .particle-container.solid {
+            background: linear-gradient(135deg, #a5f3fc, #67e8f9);
+        }
+
+        .particle-container.liquid {
+            background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+        }
+
+        .particle-container.gas {
+            background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+        }
+
+        .particle {
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--accent), var(--accent-gold));
-            border-radius: 28px 28px 0 0;
-        }
-
-        .mission-card:hover {
-            transform: translateY(-12px) scale(1.02);
-            box-shadow: 0 25px 60px rgba(6, 182, 212, 0.4);
-            border-color: var(--primary-light);
-        }
-
-        .mission-card.completed::before {
-            background: linear-gradient(90deg, var(--success), #10b981);
-        }
-
-        .mission-card.completed .mission-badge {
-            display: flex;
-        }
-
-        .mission-badge {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: var(--success);
-            width: 36px;
-            height: 36px;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, #1e40af, #1e3a8a);
             border-radius: 50%;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
 
-        .mission-icon {
-            font-size: 4rem;
-            margin-bottom: 18px;
-            display: block;
-            animation: iconFloat 3s ease-in-out infinite;
+        .particle-container.solid .particle {
+            animation: vibrate 0.3s ease-in-out infinite;
         }
 
-        @keyframes iconFloat {
+        .particle-container.liquid .particle {
+            animation: flow 2s ease-in-out infinite;
+        }
+
+        .particle-container.gas .particle {
+            animation: fly 1.5s ease-in-out infinite;
+        }
+
+        @keyframes vibrate {
 
             0%,
             100% {
-                transform: translateY(0);
+                transform: translate(0, 0);
             }
 
             50% {
-                transform: translateY(-8px);
+                transform: translate(2px, 2px);
             }
         }
 
-        .mission-title {
-            font-family: 'Fredoka One', cursive;
-            font-size: 1.5rem;
-            background: linear-gradient(135deg, #fff, var(--primary-light));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
+        @keyframes flow {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            50% {
+                transform: translateX(15px);
+            }
         }
 
-        .mission-desc {
-            color: var(--text-muted);
-            margin-bottom: 18px;
-            line-height: 1.6;
-        }
-
-        .mission-reward {
-            color: var(--accent-gold);
-            font-weight: 700;
-        }
-
-        .game-screen {
-            display: none;
-        }
-
-        .game-screen.active {
-            display: block;
-            animation: gameEnter 0.6s;
-        }
-
-        @keyframes gameEnter {
+        @keyframes fly {
             0% {
-                opacity: 0;
-                transform: scale(0.9) translateY(30px);
+                transform: translate(0, 0);
+            }
+
+            25% {
+                transform: translate(20px, -20px);
+            }
+
+            50% {
+                transform: translate(-10px, 15px);
+            }
+
+            75% {
+                transform: translate(15px, 10px);
             }
 
             100% {
-                opacity: 1;
-                transform: scale(1) translateY(0);
+                transform: translate(0, 0);
             }
         }
 
-        .game-container {
-            background: var(--glass-bg);
-            backdrop-filter: blur(25px);
-            border: 1px solid var(--glass-border);
-            border-radius: 32px;
-            padding: 40px;
-            position: relative;
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
+        .state-label {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2rem;
+            margin-top: 20px;
+            color: var(--text-primary);
         }
 
-        .close-btn {
-            position: absolute;
-            top: 24px;
-            right: 24px;
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, #ef4444, #f97316);
+        .state-description {
+            color: var(--text-muted);
+            margin-top: 10px;
+        }
+
+        /* Temperature Controls */
+        .temp-controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .temp-btn {
+            padding: 15px 35px;
             border: none;
-            border-radius: 50%;
-            font-size: 1.4rem;
+            border-radius: 50px;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.1rem;
             cursor: pointer;
-            transition: all 0.4s;
-            color: #fff;
+            transition: all 0.3s;
             display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 10px;
         }
 
-        .close-btn:hover {
-            transform: scale(1.1) rotate(90deg);
+        .temp-btn.cold {
+            background: linear-gradient(135deg, #38bdf8, #0284c7);
+            color: #fff;
         }
 
-        .game-title {
-            font-family: 'Fredoka One', cursive;
-            font-size: 2.2rem;
-            background: linear-gradient(135deg, #fff, var(--primary-light), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .temp-btn.hot {
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            color: #fff;
+        }
+
+        .temp-btn:hover {
+            transform: scale(1.08);
+        }
+
+        .temp-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Question Cards */
+        .question-card {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(124, 58, 237, 0.1));
+            border: 2px solid rgba(124, 58, 237, 0.4);
+            border-radius: 24px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .question-icon {
+            font-size: 3rem;
             text-align: center;
             margin-bottom: 15px;
         }
 
-        .lesson-box {
-            background: linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(244, 114, 182, 0.1));
-            border: 1px solid rgba(6, 182, 212, 0.3);
-            border-radius: 24px;
-            padding: 28px;
-            margin: 25px 0;
-            position: relative;
-        }
-
-        .lesson-box::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 5px;
-            height: 100%;
-            background: linear-gradient(180deg, var(--primary), var(--accent));
-            border-radius: 24px 0 0 24px;
-        }
-
-        .lesson-title {
-            font-family: 'Fredoka One', cursive;
-            background: linear-gradient(135deg, var(--primary-light), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 16px;
+        .question-text {
             font-size: 1.3rem;
-        }
-
-        .lesson-content {
-            color: var(--text-primary);
-            line-height: 1.9;
-        }
-
-        .lesson-content p {
-            margin-bottom: 16px;
-        }
-
-        .lesson-content ul {
-            margin-left: 28px;
-            margin-bottom: 16px;
-        }
-
-        .lesson-content li {
-            margin-bottom: 10px;
-            color: var(--text-muted);
-        }
-
-        .lesson-content li strong {
-            color: var(--text-primary);
-        }
-
-        .key-term {
-            background: linear-gradient(135deg, rgba(251, 191, 36, 0.3), rgba(251, 191, 36, 0.1));
-            padding: 3px 10px;
-            border-radius: 6px;
-            font-weight: 700;
-            color: var(--accent-gold);
-            border: 1px solid rgba(251, 191, 36, 0.3);
-        }
-
-        .listen-btn {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: #fff;
-            border: none;
-            padding: 14px 28px;
-            border-radius: 50px;
-            font-weight: 700;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 18px;
-            transition: all 0.4s;
-        }
-
-        .listen-btn:hover {
-            transform: scale(1.05) translateY(-2px);
-        }
-
-        .listen-btn.speaking {
-            animation: pulse 1s infinite;
-            background: linear-gradient(135deg, var(--accent), #f43f5e);
-        }
-
-        .progress-display {
             text-align: center;
-            font-size: 1.3rem;
+            color: var(--text-primary);
+            font-weight: 700;
             margin-bottom: 25px;
-            font-weight: 700;
-            color: var(--text-primary);
         }
 
-        .progress-display span {
-            background: linear-gradient(135deg, var(--accent-gold), #f59e0b);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        /* Interactive Game Areas */
-        .game-area {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 30px;
-            margin: 25px 0;
-            text-align: center;
-        }
-
-        .matter-display {
-            font-size: 8rem;
-            margin: 30px 0;
-            transition: all 0.5s;
-            filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
-        }
-
-        .state-buttons {
+        .answer-options {
             display: flex;
-            justify-content: center;
-            gap: 20px;
             flex-wrap: wrap;
-            margin-bottom: 30px;
+            justify-content: center;
+            gap: 15px;
         }
 
-        .state-btn {
-            padding: 16px 32px;
+        .answer-btn {
+            padding: 15px 30px;
             background: var(--glass-bg);
             border: 2px solid var(--glass-border);
             border-radius: 50px;
-            font-weight: 700;
-            cursor: pointer;
             color: var(--text-primary);
-            transition: all 0.4s;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .answer-btn:hover {
+            transform: scale(1.05);
+            border-color: var(--primary);
+            background: rgba(6, 182, 212, 0.2);
+        }
+
+        .answer-btn.correct {
+            background: rgba(52, 211, 153, 0.3);
+            border-color: var(--success);
+            animation: correctPop 0.5s;
+        }
+
+        .answer-btn.wrong {
+            background: rgba(248, 113, 113, 0.3);
+            border-color: #f87171;
+            animation: shake 0.5s;
+        }
+
+        @keyframes correctPop {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.15);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-8px);
+            }
+
+            75% {
+                transform: translateX(8px);
+            }
+        }
+
+        /* Feedback */
+        .feedback {
+            text-align: center;
+            padding: 20px;
+            border-radius: 16px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+            animation: fadeIn 0.4s;
+        }
+
+        .feedback.correct {
+            background: rgba(52, 211, 153, 0.2);
+            border: 1px solid var(--success);
+        }
+
+        .feedback.wrong {
+            background: rgba(248, 113, 113, 0.2);
+            border: 1px solid #f87171;
+        }
+
+        .feedback-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .feedback-text {
+            color: var(--text-primary);
             font-size: 1.1rem;
         }
 
-        .state-btn:hover {
-            transform: scale(1.08);
-            border-color: var(--primary);
-            background: rgba(6, 182, 212, 0.2);
-        }
-
-        .state-btn.active {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            border-color: transparent;
-        }
-
-        .state-info {
-            margin-top: 20px;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 16px;
-            color: var(--text-muted);
-            display: none;
-        }
-
-        .state-info.show {
-            display: block;
-            animation: fadeIn 0.4s;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
-        /* Flip Cards */
-        .flip-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
-        }
-
-        .flip-card {
-            height: 200px;
-            perspective: 1000px;
-            cursor: pointer;
-        }
-
-        .flip-card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
-        }
-
-        .flip-card.flipped .flip-card-inner {
-            transform: rotateY(180deg);
-        }
-
-        .flip-card-front,
-        .flip-card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border-radius: 20px;
+        /* Navigation */
+        .lesson-nav {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid var(--glass-border);
         }
 
-        .flip-card-front {
+        .nav-btn {
+            padding: 16px 35px;
+            border: none;
+            border-radius: 50px;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-btn.back {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
+            color: var(--text-primary);
         }
 
-        .flip-card-back {
+        .nav-btn.next {
             background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            transform: rotateY(180deg);
             color: #fff;
         }
 
-        .flip-card-front span {
-            font-size: 4rem;
+        .nav-btn:hover {
+            transform: scale(1.05);
         }
 
-        .flip-card-back h4 {
-            font-family: 'Fredoka One', cursive;
-            margin-bottom: 10px;
+        .nav-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
         }
 
-        /* Force Buttons */
-        .force-btns {
+        /* Step Indicator */
+        .step-indicator {
             display: flex;
             justify-content: center;
-            gap: 20px;
-            margin: 30px 0;
+            gap: 12px;
+            margin-bottom: 30px;
         }
 
-        .force-btn {
-            padding: 20px 40px;
-            background: var(--glass-bg);
-            border: 2px solid var(--glass-border);
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.4s;
+        .step-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: all 0.3s;
         }
 
-        .force-btn:hover {
-            transform: scale(1.1);
+        .step-dot.active {
+            background: var(--primary);
+            box-shadow: 0 0 15px var(--primary);
         }
 
-        .force-btn.push {
-            border-color: #ef4444;
+        .step-dot.completed {
+            background: var(--success);
         }
 
-        .force-btn.push:hover {
-            background: rgba(239, 68, 68, 0.2);
-        }
-
-        .force-btn.pull {
-            border-color: #3b82f6;
-        }
-
-        .force-btn.pull:hover {
-            background: rgba(59, 130, 246, 0.2);
-        }
-
-        .force-btn span {
-            font-size: 3rem;
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        .force-btn div {
-            color: var(--text-primary);
-            font-weight: 700;
-        }
-
-        .ball-container {
-            height: 120px;
-            display: flex;
+        /* Celebration */
+        .celebration {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
             align-items: center;
             justify-content: center;
-            margin: 30px 0;
+            z-index: 1000;
         }
 
-        .ball {
-            font-size: 5rem;
-            transition: transform 0.5s;
+        .celebration.show {
+            display: flex;
         }
 
-        /* Season Cards */
-        .season-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 18px;
-            margin: 30px 0;
-        }
-
-        .season-card {
-            padding: 25px 20px;
-            background: var(--glass-bg);
-            border: 2px solid var(--glass-border);
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.4s;
-            text-align: center;
-        }
-
-        .season-card:hover {
-            transform: scale(1.08);
-        }
-
-        .season-card.active {
-            border-color: var(--primary);
-            background: rgba(6, 182, 212, 0.2);
-        }
-
-        .season-card span {
-            font-size: 3rem;
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        .season-card div {
-            color: var(--text-primary);
-            font-weight: 700;
-        }
-
-        .season-info {
-            margin-top: 20px;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 16px;
-            color: var(--text-muted);
-            display: none;
-        }
-
-        .season-info.show {
-            display: block;
-            animation: fadeIn 0.4s;
-        }
-
-        .reward-popup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0);
+        .celebration-content {
             background: linear-gradient(135deg, var(--bg-medium), var(--primary-dark));
             border: 1px solid var(--glass-border);
             padding: 50px 70px;
             border-radius: 36px;
             text-align: center;
-            z-index: 1000;
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+            animation: celebratePop 0.6s;
         }
 
-        .reward-popup.show {
-            animation: rewardPop 0.6s forwards;
-        }
-
-        @keyframes rewardPop {
+        @keyframes celebratePop {
             0% {
-                transform: translate(-50%, -50%) scale(0) rotate(-10deg);
+                transform: scale(0);
             }
 
             70% {
-                transform: translate(-50%, -50%) scale(1.08);
+                transform: scale(1.1);
             }
 
             100% {
-                transform: translate(-50%, -50%) scale(1);
+                transform: scale(1);
             }
         }
 
-        .reward-stars {
-            font-size: 4.5rem;
-            margin-bottom: 18px;
+        .celebration-icon {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            animation: bounce 0.6s infinite alternate;
         }
 
-        .reward-title {
+        @keyframes bounce {
+            to {
+                transform: translateY(-15px);
+            }
+        }
+
+        .celebration-title {
             font-family: 'Fredoka One', cursive;
             font-size: 2rem;
             background: linear-gradient(135deg, #fff, var(--accent-gold));
@@ -831,49 +705,21 @@
             -webkit-text-fill-color: transparent;
         }
 
-        .reward-score {
-            color: var(--accent-gold);
-            font-weight: 700;
-            margin-top: 12px;
+        .celebration-text {
+            color: var(--text-muted);
+            margin: 15px 0 25px;
+            font-size: 1.1rem;
         }
 
-        .reward-btn {
-            margin-top: 28px;
+        .celebration-btn {
             padding: 16px 45px;
             background: linear-gradient(135deg, var(--accent-gold), #f59e0b);
             border: none;
             border-radius: 50px;
             font-family: 'Fredoka One', cursive;
-            font-size: 1.15rem;
+            font-size: 1.1rem;
             cursor: pointer;
             color: #0f172a;
-            transition: all 0.4s;
-        }
-
-        .reward-btn:hover {
-            transform: scale(1.08);
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 35px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            color: var(--text-primary);
-            padding: 18px 38px;
-            border-radius: 50px;
-            font-weight: 700;
-            z-index: 1000;
-            opacity: 0;
-            transition: all 0.5s;
-        }
-
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1;
         }
 
         .confetti-container {
@@ -888,31 +734,80 @@
 
         .confetti {
             position: absolute;
-            width: 14px;
-            height: 14px;
-            animation: confettiFall 3.5s ease-out forwards;
-            border-radius: 3px;
+            width: 12px;
+            height: 12px;
+            animation: confettiFall 3s ease-out forwards;
         }
 
         @keyframes confettiFall {
             0% {
-                transform: translateY(-60px) rotate(0deg);
+                transform: translateY(-50px) rotate(0deg);
                 opacity: 1;
             }
 
             100% {
-                transform: translateY(100vh) rotate(1080deg);
+                transform: translateY(100vh) rotate(720deg);
                 opacity: 0;
             }
         }
 
+        /* Lesson content styling */
+        .key-concept {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(6, 182, 212, 0.1));
+            border-left: 4px solid var(--primary);
+            padding: 20px 25px;
+            border-radius: 0 16px 16px 0;
+            margin: 20px 0;
+        }
+
+        .key-concept-title {
+            font-family: 'Fredoka One', cursive;
+            color: var(--primary-light);
+            margin-bottom: 10px;
+        }
+
+        .key-concept-text {
+            color: var(--text-primary);
+            line-height: 1.7;
+        }
+
+        .fun-fact {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(251, 191, 36, 0.1));
+            border: 1px dashed rgba(251, 191, 36, 0.5);
+            padding: 20px;
+            border-radius: 16px;
+            margin: 20px 0;
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+        }
+
+        .fun-fact-icon {
+            font-size: 2.5rem;
+        }
+
+        .fun-fact-text {
+            color: var(--text-primary);
+            line-height: 1.7;
+        }
+
         @media (max-width: 768px) {
-            .level-title {
-                font-size: 2.5rem;
+            .teacher-section {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
             }
 
-            .game-container {
-                padding: 25px;
+            .teacher-speech::before {
+                display: none;
+            }
+
+            .topic-title {
+                font-size: 2.2rem;
+            }
+
+            .temp-controls {
+                flex-direction: column;
             }
         }
     </style>
@@ -921,307 +816,504 @@
 <body>
     <div class="top-bar">
         <a href="../" class="back-home">← 🏠 Home</a>
-        <div class="game-stats">
-            <div class="stat">⭐ <span id="starsEarned">0</span>/12</div>
-            <div class="stat">🎯 <span id="xpEarned">0</span> XP</div>
-        </div>
-    </div>
-
-    <div class="audio-control">
-        <button class="audio-btn" id="autoSpeakBtn" onclick="toggleAutoSpeak()">🔊 Auto-Read: OFF</button>
-        <button class="audio-btn" onclick="stopSpeaking()">⏹️ Stop</button>
-    </div>
-
-    <div class="teacher">
-        <div class="teacher-bubble" id="teacherBubble">
-            <div class="teacher-name">🧑‍🔬 Professor Spark</div>
-            <div id="teacherText">Welcome to the Science Lab! Let's explore how the world works through fun experiments!
+        <div class="progress-bar">
+            <div class="progress-track">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
             </div>
-            <button class="speak-btn" id="speakBtn" onclick="speakTeacher()">🔊 Listen</button>
+            <div class="progress-label">Lesson Progress</div>
         </div>
-        <div class="teacher-avatar" onclick="toggleTeacher()">🧑‍🔬</div>
+        <div class="game-stats">
+            <div class="stat">⭐ <span id="starsEarned">0</span></div>
+        </div>
     </div>
 
     <div class="container">
-        <div id="missionSelect">
-            <div class="level-header">
-                <h1 class="level-title">🔬 Science Lab 🧪</h1>
-                <p class="level-subtitle">Discover the wonders of science!</p>
-            </div>
-            <div class="missions-grid">
-                <div class="mission-card" onclick="startMission('matter')" id="mission-matter">
-                    <div class="mission-badge">✓</div>
-                    <span class="mission-icon">🧊💧💨</span>
-                    <h3 class="mission-title">States of Matter</h3>
-                    <p class="mission-desc">Explore solid, liquid, and gas!</p>
-                    <div class="mission-reward">🌟 +3 Stars | +50 XP</div>
+        <!-- Topic Selection -->
+        <div id="topicSelect" class="topic-select">
+            <h1 class="topic-title">🔬 Science Lab</h1>
+            <p class="topic-subtitle">Pick a topic to start learning!</p>
+            <div class="topics-grid">
+                <div class="topic-card" onclick="startLesson('matter')" id="topic-matter">
+                    <span class="topic-icon">🧊💧💨</span>
+                    <div class="topic-name">States of Matter</div>
                 </div>
-                <div class="mission-card" onclick="startMission('living')" id="mission-living">
-                    <div class="mission-badge">✓</div>
-                    <span class="mission-icon">🌱🐾</span>
-                    <h3 class="mission-title">Living Things</h3>
-                    <p class="mission-desc">Plants and animals!</p>
-                    <div class="mission-reward">🌟 +3 Stars | +50 XP</div>
+                <div class="topic-card" onclick="startLesson('living')" id="topic-living">
+                    <span class="topic-icon">🌱🐾</span>
+                    <div class="topic-name">Living Things</div>
                 </div>
-                <div class="mission-card" onclick="startMission('forces')" id="mission-forces">
-                    <div class="mission-badge">✓</div>
-                    <span class="mission-icon">🏃💨</span>
-                    <h3 class="mission-title">Forces & Motion</h3>
-                    <p class="mission-desc">Push, pull, and magnets!</p>
-                    <div class="mission-reward">🌟 +3 Stars | +50 XP</div>
+                <div class="topic-card" onclick="startLesson('forces')" id="topic-forces">
+                    <span class="topic-icon">🏃💨</span>
+                    <div class="topic-name">Push & Pull</div>
                 </div>
-                <div class="mission-card" onclick="startMission('earth')" id="mission-earth">
-                    <div class="mission-badge">✓</div>
-                    <span class="mission-icon">🌍🌦️</span>
-                    <h3 class="mission-title">Earth & Space</h3>
-                    <p class="mission-desc">Weather and seasons!</p>
-                    <div class="mission-reward">🌟 +3 Stars | +50 XP</div>
+                <div class="topic-card" onclick="startLesson('earth')" id="topic-earth">
+                    <span class="topic-icon">🌍🌦️</span>
+                    <div class="topic-name">Weather</div>
                 </div>
             </div>
         </div>
 
-        <!-- Matter Game -->
-        <div id="game-matter" class="game-screen">
-            <div class="game-container">
-                <button class="close-btn" onclick="closeMission()">✕</button>
-                <h2 class="game-title">🧊 States of Matter</h2>
-                <div class="lesson-box">
-                    <div class="lesson-title">📚 What is Matter?</div>
-                    <div class="lesson-content" id="matterLesson">
-                        <p>Everything around you is made of <span class="key-term">matter</span>! Matter comes in three
-                            forms:</p>
-                        <ul>
-                            <li><strong>🧊 Solid</strong> - Keeps its shape (ice, rocks, toys)</li>
-                            <li><strong>💧 Liquid</strong> - Flows and takes the shape of its container</li>
-                            <li><strong>💨 Gas</strong> - Fills the whole space (air, steam)</li>
-                        </ul>
-                    </div>
-                    <button class="listen-btn" onclick="speakLesson('matterLesson')">🔊 Read to Me</button>
+        <!-- States of Matter Lesson -->
+        <div id="lesson-matter" class="lesson-container">
+            <!-- Step 1: Hook -->
+            <div class="lesson-step" data-step="1">
+                <div class="step-indicator">
+                    <div class="step-dot active"></div>
+                    <div class="step-dot"></div>
+                    <div class="step-dot"></div>
+                    <div class="step-dot"></div>
+                    <div class="step-dot"></div>
                 </div>
-                <div class="progress-display">Explored: <span id="matterProgress">0</span>/3 🎯</div>
-                <div class="game-area">
-                    <div class="matter-display" id="matterEmoji">💧</div>
-                    <div class="state-buttons">
-                        <button class="state-btn" onclick="changeMatter('solid')">🧊 Solid (Freeze)</button>
-                        <button class="state-btn active" onclick="changeMatter('liquid')">💧 Liquid</button>
-                        <button class="state-btn" onclick="changeMatter('gas')">💨 Gas (Heat)</button>
+
+                <div class="teacher-section">
+                    <div class="teacher-avatar">🧑‍🔬</div>
+                    <div class="teacher-speech">
+                        <div class="teacher-name">Professor Spark</div>
+                        <div class="teacher-text">
+                            Hey there, young scientist! 👋<br><br>
+                            Have you ever noticed something strange? When you put <span class="highlight">ice
+                                cubes</span> in a glass, they slowly <span class="highlight">disappear</span>!<br><br>
+                            Where do you think the ice goes? 🤔
+                        </div>
                     </div>
-                    <div class="state-info" id="matterInfo"></div>
+                </div>
+
+                <div class="question-card">
+                    <div class="question-icon">🧊❓</div>
+                    <div class="question-text">What happens to ice cubes in a glass?</div>
+                    <div class="answer-options">
+                        <button class="answer-btn" onclick="checkAnswer(this, false)">They break into tiny
+                            pieces</button>
+                        <button class="answer-btn" onclick="checkAnswer(this, true)">They turn into water!</button>
+                        <button class="answer-btn" onclick="checkAnswer(this, false)">They disappear forever</button>
+                    </div>
+                    <div class="feedback" id="feedback1"></div>
+                </div>
+
+                <div class="lesson-nav">
+                    <button class="nav-btn back" onclick="backToTopics()">← Back</button>
+                    <button class="nav-btn next" onclick="nextStep()" id="nextBtn1" disabled>Next →</button>
                 </div>
             </div>
-        </div>
 
-        <!-- Living Things Game -->
-        <div id="game-living" class="game-screen">
-            <div class="game-container">
-                <button class="close-btn" onclick="closeMission()">✕</button>
-                <h2 class="game-title">🌱 Living Things</h2>
-                <div class="lesson-box">
-                    <div class="lesson-title">📚 Plants and Animals</div>
-                    <div class="lesson-content" id="livingLesson">
-                        <p><span class="key-term">Living things</span> need food, water, and air to survive!</p>
-                        <ul>
-                            <li><strong>🌱 Plants</strong> - Make their own food using sunlight</li>
-                            <li><strong>🐾 Animals</strong> - Eat plants or other animals</li>
-                            <li><strong>🧬 Both</strong> - Grow, breathe, and reproduce</li>
-                        </ul>
-                    </div>
-                    <button class="listen-btn" onclick="speakLesson('livingLesson')">🔊 Read to Me</button>
+            <!-- Step 2: The Big Idea -->
+            <div class="lesson-step" data-step="2" style="display:none;">
+                <div class="step-indicator">
+                    <div class="step-dot completed"></div>
+                    <div class="step-dot active"></div>
+                    <div class="step-dot"></div>
+                    <div class="step-dot"></div>
+                    <div class="step-dot"></div>
                 </div>
-                <div class="progress-display">Discovered: <span id="livingProgress">0</span>/4 🎯</div>
-                <div class="flip-cards">
-                    <div class="flip-card"
-                        onclick="flipCard(this, '🐶 Dogs are mammals! They have fur and are warm-blooded.')">
-                        <div class="flip-card-inner">
-                            <div class="flip-card-front"><span>🐶</span>
-                                <div style="color:var(--text-muted)">Click me!</div>
-                            </div>
-                            <div class="flip-card-back">
-                                <h4>Dog</h4>
-                                <div>Mammal with fur!</div>
-                            </div>
+
+                <div class="teacher-section">
+                    <div class="teacher-avatar">🧑‍🔬</div>
+                    <div class="teacher-speech">
+                        <div class="teacher-name">Professor Spark</div>
+                        <div class="teacher-text">
+                            Great thinking! Yes, ice turns into water! 🎉<br><br>
+                            But wait... here's something <span class="highlight">amazing</span>!<br><br>
+                            The ice didn't really disappear. It just <span class="highlight">changed its form</span>!
+                            Let me show you the secret...
                         </div>
                     </div>
-                    <div class="flip-card" onclick="flipCard(this, '🐦 Birds have feathers and lay eggs!')">
-                        <div class="flip-card-inner">
-                            <div class="flip-card-front"><span>🐦</span>
-                                <div style="color:var(--text-muted)">Click me!</div>
-                            </div>
-                            <div class="flip-card-back">
-                                <h4>Bird</h4>
-                                <div>Has feathers!</div>
-                            </div>
-                        </div>
+                </div>
+
+                <div class="key-concept">
+                    <div class="key-concept-title">🔑 The Big Secret: Particles!</div>
+                    <div class="key-concept-text">
+                        Everything around you - your toys, water, even the air you breathe - is made of <strong>tiny
+                            tiny pieces called PARTICLES</strong>!<br><br>
+                        They're SO small you can't see them, but they're always there, and they LOVE to move around!
                     </div>
-                    <div class="flip-card" onclick="flipCard(this, '🐟 Fish breathe underwater using gills!')">
-                        <div class="flip-card-inner">
-                            <div class="flip-card-front"><span>🐟</span>
-                                <div style="color:var(--text-muted)">Click me!</div>
-                            </div>
-                            <div class="flip-card-back">
-                                <h4>Fish</h4>
-                                <div>Lives in water!</div>
-                            </div>
-                        </div>
+                </div>
+
+                <div class="fun-fact">
+                    <div class="fun-fact-icon">💡</div>
+                    <div class="fun-fact-text">
+                        <strong>Fun Fact:</strong> If you could zoom into a single drop of water, you'd see BILLIONS of
+                        tiny particles bouncing around!
                     </div>
-                    <div class="flip-card" onclick="flipCard(this, '🌻 Sunflowers turn to face the sun!')">
-                        <div class="flip-card-inner">
-                            <div class="flip-card-front"><span>🌻</span>
-                                <div style="color:var(--text-muted)">Click me!</div>
-                            </div>
-                            <div class="flip-card-back">
-                                <h4>Sunflower</h4>
-                                <div>Follows the sun!</div>
-                            </div>
-                        </div>
-                    </div>
+                </div>
+
+                <div class="lesson-nav">
+                    <button class="nav-btn back" onclick="prevStep()">← Back</button>
+                    <button class="nav-btn next" onclick="nextStep()">Let's See Them! →</button>
                 </div>
             </div>
-        </div>
 
-        <!-- Forces Game -->
-        <div id="game-forces" class="game-screen">
-            <div class="game-container">
-                <button class="close-btn" onclick="closeMission()">✕</button>
-                <h2 class="game-title">🏃 Forces & Motion</h2>
-                <div class="lesson-box">
-                    <div class="lesson-title">📚 Push and Pull</div>
-                    <div class="lesson-content" id="forcesLesson">
-                        <p>A <span class="key-term">force</span> is a push or pull that makes things move!</p>
-                        <ul>
-                            <li><strong>👐 Push</strong> - Moves things away from you</li>
-                            <li><strong>🪢 Pull</strong> - Brings things toward you</li>
-                            <li><strong>🧲 Magnets</strong> - Can push or pull without touching!</li>
-                        </ul>
-                    </div>
-                    <button class="listen-btn" onclick="speakLesson('forcesLesson')">🔊 Read to Me</button>
+            <!-- Step 3: Interactive Demo -->
+            <div class="lesson-step" data-step="3" style="display:none;">
+                <div class="step-indicator">
+                    <div class="step-dot completed"></div>
+                    <div class="step-dot completed"></div>
+                    <div class="step-dot active"></div>
+                    <div class="step-dot"></div>
+                    <div class="step-dot"></div>
                 </div>
-                <div class="progress-display">Experiments: <span id="forcesProgress">0</span>/5 🎯</div>
-                <div class="game-area">
-                    <div class="ball-container">
-                        <div class="ball" id="theBall">⚽</div>
-                    </div>
-                    <div class="force-btns">
-                        <div class="force-btn push" onclick="pushBall()"><span>👐</span>
-                            <div>PUSH</div>
-                        </div>
-                        <div class="force-btn pull" onclick="pullBall()"><span>🪢</span>
-                            <div>PULL</div>
+
+                <div class="teacher-section">
+                    <div class="teacher-avatar">🧑‍🔬</div>
+                    <div class="teacher-speech">
+                        <div class="teacher-name">Professor Spark</div>
+                        <div class="teacher-text">
+                            Now watch carefully! I'll show you what happens to particles when you <span
+                                class="highlight">heat</span> or <span class="highlight">cool</span> them.<br><br>
+                            👇 Try the buttons below to change the temperature!
                         </div>
                     </div>
+                </div>
+
+                <div class="demo-area">
+                    <div class="demo-title">🔬 Particle Lab - Try It!</div>
+                    <div class="particle-container solid" id="particleBox">
+                        <!-- Particles will be generated by JS -->
+                    </div>
+                    <div class="state-label" id="stateLabel">🧊 ICE (Solid)</div>
+                    <div class="state-description" id="stateDesc">Particles are packed tight and just vibrate in place!
+                    </div>
+
+                    <div class="temp-controls">
+                        <button class="temp-btn cold" onclick="changeState('solid')" id="coolBtn">❄️ Cool Down</button>
+                        <button class="temp-btn hot" onclick="changeState('liquid')" id="warmBtn">🌡️ Warm Up</button>
+                        <button class="temp-btn hot" onclick="changeState('gas')" id="heatBtn"
+                            style="background: linear-gradient(135deg, #ef4444, #dc2626);">🔥 Heat More!</button>
+                    </div>
+                </div>
+
+                <div class="lesson-nav">
+                    <button class="nav-btn back" onclick="prevStep()">← Back</button>
+                    <button class="nav-btn next" onclick="nextStep()">I Understand! →</button>
                 </div>
             </div>
-        </div>
 
-        <!-- Earth & Space Game -->
-        <div id="game-earth" class="game-screen">
-            <div class="game-container">
-                <button class="close-btn" onclick="closeMission()">✕</button>
-                <h2 class="game-title">🌍 Earth & Space</h2>
-                <div class="lesson-box">
-                    <div class="lesson-title">📚 Weather and Seasons</div>
-                    <div class="lesson-content" id="earthLesson">
-                        <p>Earth has different <span class="key-term">seasons</span> as it travels around the Sun!</p>
-                        <ul>
-                            <li><strong>🌸 Spring</strong> - Flowers bloom, baby animals born</li>
-                            <li><strong>☀️ Summer</strong> - Hot and sunny, long days</li>
-                            <li><strong>🍂 Autumn</strong> - Leaves fall, harvest time</li>
-                            <li><strong>❄️ Winter</strong> - Cold and snowy, short days</li>
-                        </ul>
-                    </div>
-                    <button class="listen-btn" onclick="speakLesson('earthLesson')">🔊 Read to Me</button>
+            <!-- Step 4: Explain Why -->
+            <div class="lesson-step" data-step="4" style="display:none;">
+                <div class="step-indicator">
+                    <div class="step-dot completed"></div>
+                    <div class="step-dot completed"></div>
+                    <div class="step-dot completed"></div>
+                    <div class="step-dot active"></div>
+                    <div class="step-dot"></div>
                 </div>
-                <div class="progress-display">Explored: <span id="earthProgress">0</span>/4 🎯</div>
-                <div class="game-area">
-                    <div class="season-cards">
-                        <div class="season-card" onclick="selectSeason(this, 'spring')"><span>🌸</span>
-                            <div>Spring</div>
-                        </div>
-                        <div class="season-card" onclick="selectSeason(this, 'summer')"><span>☀️</span>
-                            <div>Summer</div>
-                        </div>
-                        <div class="season-card" onclick="selectSeason(this, 'autumn')"><span>🍂</span>
-                            <div>Autumn</div>
-                        </div>
-                        <div class="season-card" onclick="selectSeason(this, 'winter')"><span>❄️</span>
-                            <div>Winter</div>
+
+                <div class="teacher-section">
+                    <div class="teacher-avatar">🧑‍🔬</div>
+                    <div class="teacher-speech">
+                        <div class="teacher-name">Professor Spark</div>
+                        <div class="teacher-text">
+                            Did you see that? Woohoo! 🎉<br><br>
+                            Here's <span class="highlight">WHY</span> it happens...
                         </div>
                     </div>
-                    <div class="season-info" id="seasonInfo"></div>
+                </div>
+
+                <div class="key-concept">
+                    <div class="key-concept-title">🧊 SOLID (like ice)</div>
+                    <div class="key-concept-text">
+                        When it's <strong>cold</strong>, particles don't have much energy.<br>
+                        They huddle together and just <strong>vibrate</strong> in place. That's why ice keeps its shape!
+                    </div>
+                </div>
+
+                <div class="key-concept" style="border-left-color: #38bdf8;">
+                    <div class="key-concept-title" style="color: #38bdf8;">💧 LIQUID (like water)</div>
+                    <div class="key-concept-text">
+                        When you <strong>add heat</strong>, particles get more energy!<br>
+                        They start <strong>sliding past each other</strong>. That's why water can flow and splash!
+                    </div>
+                </div>
+
+                <div class="key-concept" style="border-left-color: #a78bfa;">
+                    <div class="key-concept-title" style="color: #a78bfa;">💨 GAS (like steam)</div>
+                    <div class="key-concept-text">
+                        With <strong>LOTS of heat</strong>, particles go CRAZY!<br>
+                        They <strong>fly everywhere</strong> super fast. That's why steam floats up and spreads out!
+                    </div>
+                </div>
+
+                <div class="fun-fact">
+                    <div class="fun-fact-icon">🤯</div>
+                    <div class="fun-fact-text">
+                        <strong>Mind-Blowing:</strong> The same water particles are in ice, water, AND steam. They just
+                        move differently! The water in your glass could have once been a cloud in the sky!
+                    </div>
+                </div>
+
+                <div class="lesson-nav">
+                    <button class="nav-btn back" onclick="prevStep()">← Back</button>
+                    <button class="nav-btn next" onclick="nextStep()">Quiz Time! →</button>
+                </div>
+            </div>
+
+            <!-- Step 5: Quiz -->
+            <div class="lesson-step" data-step="5" style="display:none;">
+                <div class="step-indicator">
+                    <div class="step-dot completed"></div>
+                    <div class="step-dot completed"></div>
+                    <div class="step-dot completed"></div>
+                    <div class="step-dot completed"></div>
+                    <div class="step-dot active"></div>
+                </div>
+
+                <div class="teacher-section">
+                    <div class="teacher-avatar">🧑‍🔬</div>
+                    <div class="teacher-speech">
+                        <div class="teacher-name">Professor Spark</div>
+                        <div class="teacher-text">
+                            You're doing AMAZING! 🌟<br><br>
+                            Let's see what you learned! Answer these questions to earn your <span
+                                class="highlight">Science Star</span>! ⭐
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <div class="question-icon">❓</div>
+                    <div class="question-text">Why does ice melt when you leave it in the sun?</div>
+                    <div class="answer-options">
+                        <button class="answer-btn" onclick="checkFinalAnswer(this, false, 1)">The sun breaks the
+                            ice</button>
+                        <button class="answer-btn" onclick="checkFinalAnswer(this, true, 1)">Heat makes particles move
+                            faster!</button>
+                        <button class="answer-btn" onclick="checkFinalAnswer(this, false, 1)">The ice wants to be
+                            water</button>
+                    </div>
+                    <div class="feedback" id="feedbackQ1"></div>
+                </div>
+
+                <div class="question-card" id="q2Card" style="display:none;">
+                    <div class="question-icon">❓</div>
+                    <div class="question-text">When water boils, where does it go?</div>
+                    <div class="answer-options">
+                        <button class="answer-btn" onclick="checkFinalAnswer(this, false, 2)">It disappears
+                            forever</button>
+                        <button class="answer-btn" onclick="checkFinalAnswer(this, false, 2)">It goes into the
+                            pot</button>
+                        <button class="answer-btn" onclick="checkFinalAnswer(this, true, 2)">It becomes gas and floats
+                            into the air!</button>
+                    </div>
+                    <div class="feedback" id="feedbackQ2"></div>
+                </div>
+
+                <div class="lesson-nav">
+                    <button class="nav-btn back" onclick="prevStep()">← Back</button>
+                    <button class="nav-btn next" onclick="completeLesson()" id="completeBtn" disabled>🎉
+                        Complete!</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="reward-popup" id="rewardPopup">
-        <div class="reward-stars">⭐⭐⭐</div>
-        <div class="reward-title">Experiment Complete!</div>
-        <div class="reward-score">+50 XP Earned!</div>
-        <button class="reward-btn" onclick="closeReward()">AWESOME! 🎉</button>
+    <!-- Celebration Popup -->
+    <div class="celebration" id="celebration">
+        <div class="celebration-content">
+            <div class="celebration-icon">🏆</div>
+            <div class="celebration-title">Lesson Complete!</div>
+            <div class="celebration-text">You learned about States of Matter!<br>⭐ +1 Star earned!</div>
+            <button class="celebration-btn" onclick="finishLesson()">Awesome! →</button>
+        </div>
     </div>
 
     <div class="confetti-container" id="confetti"></div>
-    <div class="toast" id="toast"></div>
 
     <script>
-        let autoSpeak = false;
-        function speak(text, onEnd) { stopSpeaking(); if ('speechSynthesis' in window) { const u = new SpeechSynthesisUtterance(text); u.rate = 0.9; u.pitch = 1.1; const v = speechSynthesis.getVoices().find(v => v.name.includes('Google') || v.name.includes('Female')); if (v) u.voice = v; if (onEnd) u.onend = onEnd; speechSynthesis.speak(u); } }
-        function stopSpeaking() { if ('speechSynthesis' in window) speechSynthesis.cancel(); document.querySelectorAll('.listen-btn, .speak-btn').forEach(b => b.classList.remove('speaking')); }
-        function toggleAutoSpeak() { autoSpeak = !autoSpeak; const btn = document.getElementById('autoSpeakBtn'); btn.textContent = '🔊 Auto-Read: ' + (autoSpeak ? 'ON' : 'OFF'); btn.classList.toggle('active', autoSpeak); if (autoSpeak) showToast('🔊 Auto-read enabled!'); }
-        function speakLesson(id) { const l = document.getElementById(id); if (!l) return; const b = l.parentElement.querySelector('.listen-btn'); b.classList.add('speaking'); speak(l.innerText, () => b.classList.remove('speaking')); }
-        let teacherVisible = false;
-        const msgs = { welcome: "Welcome to the Science Lab! Let's explore how the world works!", matter: "Matter is everything around us! Let's see how it changes.", living: "All living things need food, water, and air!", forces: "Forces make things move! Try pushing and pulling the ball.", earth: "Our Earth has four amazing seasons!" };
-        function toggleTeacher() { teacherVisible = !teacherVisible; document.getElementById('teacherBubble').classList.toggle('show', teacherVisible); }
-        function speakTeacher() { const b = document.getElementById('speakBtn'); b.classList.add('speaking'); speak(document.getElementById('teacherText').innerText, () => b.classList.remove('speaking')); }
-        function teacherSay(m) { document.getElementById('teacherText').textContent = m; document.getElementById('teacherBubble').classList.add('show'); teacherVisible = true; if (autoSpeak) setTimeout(() => speak(m), 500); }
-        setTimeout(() => teacherSay(msgs.welcome), 1000);
+        // Generate particles
+        function createParticles() {
+            const box = document.getElementById('particleBox');
+            box.innerHTML = '';
+            const positions = [
+                { x: 30, y: 30 }, { x: 80, y: 30 }, { x: 130, y: 30 }, { x: 180, y: 30 },
+                { x: 55, y: 75 }, { x: 105, y: 75 }, { x: 155, y: 75 },
+                { x: 30, y: 120 }, { x: 80, y: 120 }, { x: 130, y: 120 }, { x: 180, y: 120 },
+                { x: 55, y: 165 }, { x: 105, y: 165 }, { x: 155, y: 165 },
+                { x: 30, y: 210 }, { x: 80, y: 210 }, { x: 130, y: 210 }, { x: 180, y: 210 }
+            ];
+            positions.forEach((pos, i) => {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.style.left = pos.x + 'px';
+                p.style.top = pos.y + 'px';
+                p.style.animationDelay = (i * 0.1) + 's';
+                box.appendChild(p);
+            });
+        }
+        createParticles();
 
-        let totalStars = parseInt(localStorage.getItem('science_stars') || 0);
-        let totalXP = parseInt(localStorage.getItem('science_xp') || 0);
-        let completedMissions = JSON.parse(localStorage.getItem('science_completed') || '[]');
-        function updateStats() { document.getElementById('starsEarned').textContent = totalStars; document.getElementById('xpEarned').textContent = totalXP; completedMissions.forEach(m => { const c = document.getElementById('mission-' + m); if (c) c.classList.add('completed'); }); }
-        updateStats();
-        function startMission(id) { document.getElementById('missionSelect').style.display = 'none'; document.getElementById('game-' + id).classList.add('active'); teacherSay(msgs[id] || msgs.welcome); if (autoSpeak) setTimeout(() => speakLesson({ matter: 'matterLesson', living: 'livingLesson', forces: 'forcesLesson', earth: 'earthLesson' }[id]), 2000); }
-        function closeMission() { stopSpeaking(); document.querySelectorAll('.game-screen').forEach(g => g.classList.remove('active')); document.getElementById('missionSelect').style.display = 'block'; teacherSay("Great science! Pick another experiment!"); }
-        function showToast(m) { const t = document.getElementById('toast'); t.textContent = m; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2500); }
-        function createConfetti(n) { const c = ['#06b6d4', '#f472b6', '#fbbf24', '#34d399', '#60a5fa']; for (let i = 0; i < n; i++) { const e = document.createElement('div'); e.className = 'confetti'; e.style.left = Math.random() * 100 + '%'; e.style.background = c[Math.floor(Math.random() * c.length)]; document.getElementById('confetti').appendChild(e); setTimeout(() => e.remove(), 3500); } }
-        function completeMission(id) { if (!completedMissions.includes(id)) { completedMissions.push(id); totalStars += 3; totalXP += 50; localStorage.setItem('science_stars', totalStars); localStorage.setItem('science_xp', totalXP); localStorage.setItem('science_completed', JSON.stringify(completedMissions)); updateStats(); document.getElementById('rewardPopup').classList.add('show'); createConfetti(60); speak("Congratulations! You earned 3 stars!"); } }
-        function closeReward() { document.getElementById('rewardPopup').classList.remove('show'); closeMission(); }
+        // Change state
+        function changeState(state) {
+            const box = document.getElementById('particleBox');
+            const label = document.getElementById('stateLabel');
+            const desc = document.getElementById('stateDesc');
 
-        // Matter game
-        let matterExplored = new Set();
-        const matterInfo = { solid: '🧊 SOLID: Particles packed tight! Keeps its shape.', liquid: '💧 LIQUID: Particles slide past each other. Flows!', gas: '💨 GAS: Particles spread out everywhere!' };
-        function changeMatter(state) {
-            document.querySelectorAll('.state-btn').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
-            const emojis = { solid: '🧊', liquid: '💧', gas: '💨' };
-            document.getElementById('matterEmoji').textContent = emojis[state];
-            document.getElementById('matterInfo').textContent = matterInfo[state];
-            document.getElementById('matterInfo').classList.add('show');
-            if (!matterExplored.has(state)) { matterExplored.add(state); document.getElementById('matterProgress').textContent = matterExplored.size; showToast('✅ ' + state.charAt(0).toUpperCase() + state.slice(1) + ' explored!'); if (matterExplored.size >= 3) completeMission('matter'); }
+            box.className = 'particle-container ' + state;
+
+            if (state === 'solid') {
+                label.textContent = '🧊 ICE (Solid)';
+                desc.textContent = 'Particles are packed tight and just vibrate in place!';
+            } else if (state === 'liquid') {
+                label.textContent = '💧 WATER (Liquid)';
+                desc.textContent = 'Particles slide past each other - that\'s why water flows!';
+            } else {
+                label.textContent = '💨 STEAM (Gas)';
+                desc.textContent = 'Particles fly everywhere super fast! They spread out into the air!';
+            }
         }
 
-        // Living things
-        let livingProgress = 0;
-        function flipCard(card, fact) { if (!card.classList.contains('flipped')) { card.classList.add('flipped'); livingProgress++; document.getElementById('livingProgress').textContent = livingProgress; showToast('🐾 Discovered!'); if (autoSpeak) speak(fact); if (livingProgress >= 4) completeMission('living'); } }
+        // Lesson navigation
+        let currentStep = 1;
+        let quizScore = 0;
 
-        // Forces game
-        let forcesProgress = 0;
-        function pushBall() { const b = document.getElementById('theBall'); b.style.transform = 'translateX(100px)'; forcesProgress++; document.getElementById('forcesProgress').textContent = forcesProgress; showToast('👐 Push!'); setTimeout(() => b.style.transform = '', 300); if (forcesProgress >= 5) completeMission('forces'); }
-        function pullBall() { const b = document.getElementById('theBall'); b.style.transform = 'translateX(-100px)'; forcesProgress++; document.getElementById('forcesProgress').textContent = forcesProgress; showToast('🪢 Pull!'); setTimeout(() => b.style.transform = '', 300); if (forcesProgress >= 5) completeMission('forces'); }
-
-        // Earth game
-        let earthExplored = new Set();
-        const seasonInfo = { spring: '🌸 Spring: Flowers bloom, days get longer!', summer: '☀️ Summer: Hot and sunny, time for beach!', autumn: '🍂 Autumn: Leaves fall, harvesting crops!', winter: '❄️ Winter: Cold and snowy, time to stay warm!' };
-        function selectSeason(card, season) {
-            document.querySelectorAll('.season-card').forEach(c => c.classList.remove('active'));
-            card.classList.add('active');
-            document.getElementById('seasonInfo').textContent = seasonInfo[season];
-            document.getElementById('seasonInfo').classList.add('show');
-            if (!earthExplored.has(season)) { earthExplored.add(season); document.getElementById('earthProgress').textContent = earthExplored.size; showToast('🌍 ' + season.charAt(0).toUpperCase() + season.slice(1) + ' explored!'); if (autoSpeak) speak(seasonInfo[season]); if (earthExplored.size >= 4) completeMission('earth'); }
+        function startLesson(topic) {
+            document.getElementById('topicSelect').style.display = 'none';
+            document.getElementById('lesson-' + topic).classList.add('active');
+            updateProgress();
         }
 
-        if ('speechSynthesis' in window) { speechSynthesis.getVoices(); speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices(); }
+        function backToTopics() {
+            document.querySelectorAll('.lesson-container').forEach(l => l.classList.remove('active'));
+            document.getElementById('topicSelect').style.display = 'block';
+            currentStep = 1;
+            resetLesson();
+        }
+
+        function nextStep() {
+            document.querySelector(`[data-step="${currentStep}"]`).style.display = 'none';
+            currentStep++;
+            document.querySelector(`[data-step="${currentStep}"]`).style.display = 'block';
+            updateProgress();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function prevStep() {
+            document.querySelector(`[data-step="${currentStep}"]`).style.display = 'none';
+            currentStep--;
+            document.querySelector(`[data-step="${currentStep}"]`).style.display = 'block';
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const pct = (currentStep / 5) * 100;
+            document.getElementById('progressFill').style.width = pct + '%';
+        }
+
+        // Answer checking
+        function checkAnswer(btn, correct) {
+            const feedback = document.getElementById('feedback1');
+            document.querySelectorAll('.answer-btn').forEach(b => b.disabled = true);
+
+            if (correct) {
+                btn.classList.add('correct');
+                feedback.className = 'feedback correct show';
+                feedback.innerHTML = '<div class="feedback-icon">🎉</div><div class="feedback-text">Yes! Ice melts and becomes water!</div>';
+                document.getElementById('nextBtn1').disabled = false;
+            } else {
+                btn.classList.add('wrong');
+                feedback.className = 'feedback wrong show';
+                feedback.innerHTML = '<div class="feedback-icon">🤔</div><div class="feedback-text">Not quite! Think about what you see in the glass after the ice is gone...</div>';
+                setTimeout(() => {
+                    btn.classList.remove('wrong');
+                    btn.disabled = false;
+                    feedback.classList.remove('show');
+                }, 2000);
+            }
+        }
+
+        function checkFinalAnswer(btn, correct, q) {
+            const feedback = document.getElementById('feedbackQ' + q);
+            const btns = btn.parentElement.querySelectorAll('.answer-btn');
+            btns.forEach(b => b.disabled = true);
+
+            if (correct) {
+                btn.classList.add('correct');
+                feedback.className = 'feedback correct show';
+                feedback.innerHTML = '<div class="feedback-icon">⭐</div><div class="feedback-text">Excellent! You really understand this!</div>';
+                quizScore++;
+
+                if (q === 1) {
+                    setTimeout(() => {
+                        document.getElementById('q2Card').style.display = 'block';
+                        document.getElementById('q2Card').scrollIntoView({ behavior: 'smooth' });
+                    }, 1500);
+                } else if (q === 2) {
+                    document.getElementById('completeBtn').disabled = false;
+                }
+            } else {
+                btn.classList.add('wrong');
+                feedback.className = 'feedback wrong show';
+                feedback.innerHTML = '<div class="feedback-icon">💭</div><div class="feedback-text">Remember - heat makes particles move faster! Try again.</div>';
+                setTimeout(() => {
+                    btn.classList.remove('wrong');
+                    btns.forEach(b => b.disabled = false);
+                    feedback.classList.remove('show');
+                }, 2500);
+            }
+        }
+
+        function completeLesson() {
+            document.getElementById('celebration').classList.add('show');
+            createConfetti(80);
+
+            // Update stars
+            let stars = parseInt(localStorage.getItem('science_stars') || 0);
+            stars++;
+            localStorage.setItem('science_stars', stars);
+            document.getElementById('starsEarned').textContent = stars;
+
+            // Mark topic completed
+            document.getElementById('topic-matter').classList.add('completed');
+            let completed = JSON.parse(localStorage.getItem('science_completed') || '[]');
+            if (!completed.includes('matter')) {
+                completed.push('matter');
+                localStorage.setItem('science_completed', JSON.stringify(completed));
+            }
+        }
+
+        function finishLesson() {
+            document.getElementById('celebration').classList.remove('show');
+            backToTopics();
+        }
+
+        function resetLesson() {
+            currentStep = 1;
+            quizScore = 0;
+            document.querySelectorAll('.lesson-step').forEach((s, i) => {
+                s.style.display = i === 0 ? 'block' : 'none';
+            });
+            document.querySelectorAll('.answer-btn').forEach(b => {
+                b.disabled = false;
+                b.classList.remove('correct', 'wrong');
+            });
+            document.querySelectorAll('.feedback').forEach(f => f.classList.remove('show'));
+            document.getElementById('nextBtn1').disabled = true;
+            document.getElementById('completeBtn').disabled = true;
+            document.getElementById('q2Card').style.display = 'none';
+            updateProgress();
+        }
+
+        function createConfetti(n) {
+            const colors = ['#06b6d4', '#f472b6', '#fbbf24', '#34d399', '#a78bfa'];
+            for (let i = 0; i < n; i++) {
+                const c = document.createElement('div');
+                c.className = 'confetti';
+                c.style.left = Math.random() * 100 + '%';
+                c.style.background = colors[Math.floor(Math.random() * colors.length)];
+                c.style.animationDelay = Math.random() * 0.5 + 's';
+                document.getElementById('confetti').appendChild(c);
+                setTimeout(() => c.remove(), 3000);
+            }
+        }
+
+        // Load saved progress
+        document.addEventListener('DOMContentLoaded', () => {
+            const stars = parseInt(localStorage.getItem('science_stars') || 0);
+            document.getElementById('starsEarned').textContent = stars;
+
+            const completed = JSON.parse(localStorage.getItem('science_completed') || '[]');
+            completed.forEach(topic => {
+                const el = document.getElementById('topic-' + topic);
+                if (el) el.classList.add('completed');
+            });
+        });
     </script>
 </body>
 
