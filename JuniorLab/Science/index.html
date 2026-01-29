@@ -50,7 +50,6 @@
 
         .back-home:hover {
             background: rgba(255, 255, 255, 0.2);
-            transform: scale(1.05);
         }
 
         .game-stats {
@@ -68,17 +67,154 @@
             font-weight: 700;
         }
 
-        .stat-icon {
-            font-size: 1.3rem;
-        }
-
         .container {
             max-width: 1100px;
             margin: 0 auto;
             padding: 30px 20px;
         }
 
-        /* Level Header */
+        /* Teacher Character */
+        .teacher {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+
+        .teacher-avatar {
+            font-size: 5rem;
+            cursor: pointer;
+            animation: teacherBounce 2s infinite;
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
+        }
+
+        @keyframes teacherBounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .teacher-bubble {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #fff;
+            color: #333;
+            padding: 20px 25px;
+            border-radius: 20px;
+            max-width: 350px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 15px;
+            display: none;
+            line-height: 1.6;
+        }
+
+        .teacher-bubble.show {
+            display: block;
+            animation: bubbleIn 0.3s ease;
+        }
+
+        @keyframes bubbleIn {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        .teacher-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-top-color: #fff;
+        }
+
+        .teacher-name {
+            font-family: 'Fredoka One', cursive;
+            color: #11998e;
+            margin-bottom: 8px;
+        }
+
+        .speak-btn {
+            background: linear-gradient(45deg, #11998e, #38ef7d);
+            color: #fff;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .speak-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .speak-btn.speaking {
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.6;
+            }
+        }
+
+        /* Audio Controls */
+        .audio-control {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 100;
+            display: flex;
+            gap: 10px;
+        }
+
+        .audio-btn {
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .audio-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .audio-btn.active {
+            background: linear-gradient(45deg, #11998e, #38ef7d);
+            color: #fff;
+        }
+
         .level-header {
             text-align: center;
             margin-bottom: 30px;
@@ -87,22 +223,16 @@
         .level-title {
             font-family: 'Fredoka One', cursive;
             font-size: 2.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
         }
 
         .level-subtitle {
             color: rgba(255, 255, 255, 0.8);
-            font-size: 1.1rem;
             margin-top: 10px;
         }
 
-        /* Mission Cards */
         .missions-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 25px;
             margin-bottom: 30px;
         }
@@ -114,28 +244,13 @@
             color: #333;
             cursor: pointer;
             transition: all 0.4s;
-            position: relative;
-            overflow: hidden;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        .mission-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: linear-gradient(90deg, #11998e, #38ef7d);
+            border-top: 5px solid #11998e;
+            position: relative;
         }
 
         .mission-card:hover {
             transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-        }
-
-        .mission-card.completed {
-            border: 3px solid #4CAF50;
         }
 
         .mission-card.completed::after {
@@ -149,19 +264,6 @@
         .mission-icon {
             font-size: 3.5rem;
             margin-bottom: 15px;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-
-            0%,
-            100% {
-                transform: scale(1);
-            }
-
-            50% {
-                transform: scale(1.1);
-            }
         }
 
         .mission-title {
@@ -173,20 +275,14 @@
 
         .mission-desc {
             color: #666;
-            font-size: 0.95rem;
             margin-bottom: 15px;
         }
 
         .mission-reward {
-            display: flex;
-            align-items: center;
-            gap: 8px;
             color: #ff9800;
             font-weight: 700;
-            font-size: 0.9rem;
         }
 
-        /* Game Screen */
         .game-screen {
             display: none;
         }
@@ -228,7 +324,6 @@
             font-size: 1.5rem;
             cursor: pointer;
             transition: all 0.3s;
-            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
         }
 
         .close-btn:hover {
@@ -243,40 +338,86 @@
             margin-bottom: 10px;
         }
 
-        .game-instructions {
-            text-align: center;
-            color: #666;
-            margin-bottom: 25px;
-            background: #e8f5e9;
-            padding: 15px;
-            border-radius: 15px;
+        /* Lesson Box */
+        .lesson-box {
+            background: linear-gradient(145deg, #e8f5e9, #c8e6c9);
+            border-radius: 20px;
+            padding: 25px;
+            margin: 20px 0;
+            border-left: 5px solid #4CAF50;
         }
 
-        /* Matter Game */
-        .matter-stage {
-            text-align: center;
-            padding: 40px;
+        .lesson-title {
+            font-family: 'Fredoka One', cursive;
+            color: #2e7d32;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .lesson-content {
+            color: #333;
+            line-height: 1.8;
+        }
+
+        .lesson-content p {
+            margin-bottom: 15px;
+        }
+
+        .lesson-content ul {
+            margin-left: 25px;
+            margin-bottom: 15px;
+        }
+
+        .lesson-content li {
+            margin-bottom: 8px;
+        }
+
+        .key-term {
+            background: #fff9c4;
+            padding: 2px 8px;
+            border-radius: 5px;
+            font-weight: 700;
+            color: #f57f17;
+        }
+
+        .listen-btn {
+            background: linear-gradient(45deg, #2196F3, #00BCD4);
+            color: #fff;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .listen-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .listen-btn.speaking {
+            animation: pulse 1s infinite;
+            background: linear-gradient(45deg, #ff6b9d, #ffa64d);
+        }
+
+        /* Interactive Area */
+        .interactive-area {
             background: linear-gradient(180deg, #e3f2fd, #bbdefb);
             border-radius: 25px;
+            padding: 30px;
             margin: 20px 0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .matter-bg {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 30%;
-            background: linear-gradient(0deg, rgba(0, 0, 0, 0.1), transparent);
+            text-align: center;
         }
 
         .matter-display {
             font-size: 10rem;
-            position: relative;
-            z-index: 1;
             transition: all 0.5s;
+            margin: 20px 0;
         }
 
         .matter-display.animate {
@@ -299,9 +440,8 @@
 
         .matter-name {
             font-family: 'Fredoka One', cursive;
-            font-size: 2.5rem;
+            font-size: 2rem;
             color: #1565c0;
-            margin-top: 15px;
         }
 
         .matter-info {
@@ -310,45 +450,12 @@
             font-size: 1.1rem;
         }
 
-        .temp-bar {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            margin: 25px 0;
-        }
-
-        .temp-label {
-            font-family: 'Fredoka One', cursive;
-            font-size: 1.2rem;
-        }
-
-        .temp-slider {
-            width: 300px;
-            height: 20px;
-            background: linear-gradient(90deg, #2196F3, #4CAF50, #FF9800, #f44336);
-            border-radius: 10px;
-            position: relative;
-            cursor: pointer;
-        }
-
-        .temp-handle {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 30px;
-            height: 30px;
-            background: #fff;
-            border-radius: 50%;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-            transition: left 0.3s;
-        }
-
         .action-btns {
             display: flex;
             justify-content: center;
             gap: 20px;
             flex-wrap: wrap;
+            margin-top: 25px;
         }
 
         .action-btn {
@@ -371,16 +478,14 @@
         .btn-hot {
             background: linear-gradient(45deg, #ff6b6b, #ffa64d);
             color: #fff;
-            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
         }
 
         .btn-cold {
             background: linear-gradient(45deg, #2196F3, #00BCD4);
             color: #fff;
-            box-shadow: 0 8px 25px rgba(33, 150, 243, 0.4);
         }
 
-        /* Particles Animation */
+        /* Particles */
         .particles {
             display: flex;
             justify-content: center;
@@ -461,73 +566,16 @@
             }
         }
 
-        /* Biology Cards */
-        .bio-section {
-            margin: 25px 0;
-        }
-
-        .bio-title {
-            font-family: 'Fredoka One', cursive;
-            color: #11998e;
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .lifecycle {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin: 20px 0;
-        }
-
-        .lifecycle-item {
-            background: linear-gradient(145deg, #c8e6c9, #a5d6a7);
-            padding: 20px;
-            border-radius: 20px;
-            text-align: center;
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-
-        .lifecycle-item:hover {
-            transform: scale(1.1);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        .lifecycle-item.active {
-            background: linear-gradient(145deg, #4CAF50, #8BC34A);
-            color: #fff;
-        }
-
-        .lifecycle-icon {
-            font-size: 3rem;
-            margin-bottom: 10px;
-        }
-
-        .lifecycle-label {
-            font-weight: 800;
-        }
-
-        .arrow {
-            font-size: 2rem;
-            color: #4CAF50;
-        }
-
         /* Flip Cards */
         .flip-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 20px;
         }
 
-        .flip-card-container {
+        .flip-container {
             perspective: 1000px;
-            height: 220px;
+            min-height: 220px;
             cursor: pointer;
         }
 
@@ -537,9 +585,10 @@
             position: relative;
             transform-style: preserve-3d;
             transition: transform 0.6s;
+            min-height: 220px;
         }
 
-        .flip-card-container.flipped .flip-card {
+        .flip-container.flipped .flip-card {
             transform: rotateY(180deg);
         }
 
@@ -563,7 +612,7 @@
         }
 
         .flip-back {
-            background: linear-gradient(145deg, #fff, #e8f5e9);
+            background: #fff;
             color: #333;
             transform: rotateY(180deg);
             border: 3px solid #4CAF50;
@@ -582,94 +631,45 @@
         .flip-info {
             text-align: center;
             font-size: 0.95rem;
-            color: #555;
+            line-height: 1.5;
         }
 
-        /* Forces Demo */
-        .force-demo {
-            text-align: center;
-            padding: 40px;
-            background: linear-gradient(180deg, #e3f2fd, #bbdefb);
-            border-radius: 25px;
-            margin: 20px 0;
-        }
-
-        .force-ball {
-            font-size: 6rem;
-            display: inline-block;
-            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-
-        .force-track {
-            width: 400px;
-            max-width: 100%;
-            height: 8px;
-            background: rgba(0, 0, 0, 0.1);
-            border-radius: 4px;
-            margin: 20px auto;
-            position: relative;
-        }
-
-        .force-marker {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 20px;
-            height: 20px;
-            background: #4CAF50;
-            border-radius: 50%;
-            transition: left 0.4s;
-            left: 50%;
-        }
-
-        /* Magnet Game */
-        .magnet-demo {
+        /* Lifecycle */
+        .lifecycle {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 30px;
-            margin: 30px 0;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin: 25px 0;
         }
 
-        .magnet-pole {
-            padding: 25px 40px;
-            font-family: 'Fredoka One', cursive;
-            font-size: 1.5rem;
-            border-radius: 15px;
+        .lifecycle-item {
+            background: linear-gradient(145deg, #c8e6c9, #a5d6a7);
+            padding: 20px;
+            border-radius: 20px;
+            text-align: center;
             cursor: pointer;
             transition: all 0.3s;
-            user-select: none;
         }
 
-        .magnet-pole:hover {
-            transform: scale(1.1);
+        .lifecycle-item:hover {
+            transform: scale(1.05);
         }
 
-        .pole-n {
-            background: linear-gradient(145deg, #f44336, #e53935);
+        .lifecycle-item.active {
+            background: linear-gradient(145deg, #4CAF50, #8BC34A);
             color: #fff;
         }
 
-        .pole-s {
-            background: linear-gradient(145deg, #2196F3, #1976D2);
-            color: #fff;
-        }
-
-        .magnet-result {
+        .lifecycle-icon {
             font-size: 3rem;
-            animation: magnetPulse 1s infinite;
+            margin-bottom: 10px;
         }
 
-        @keyframes magnetPulse {
-
-            0%,
-            100% {
-                transform: scale(1);
-            }
-
-            50% {
-                transform: scale(1.2);
-            }
+        .arrow {
+            font-size: 2rem;
+            color: #4CAF50;
         }
 
         /* Water Cycle */
@@ -678,7 +678,7 @@
             flex-direction: column;
             align-items: center;
             padding: 30px;
-            background: linear-gradient(180deg, #e3f2fd 0%, #81d4fa 50%, #4fc3f7 100%);
+            background: linear-gradient(180deg, #e3f2fd, #81d4fa, #4fc3f7);
             border-radius: 25px;
             margin: 20px 0;
         }
@@ -687,14 +687,13 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 20px;
+            gap: 15px;
             flex-wrap: wrap;
-            margin: 20px 0;
         }
 
         .cycle-stage {
             text-align: center;
-            transition: all 0.3s;
+            padding: 15px;
         }
 
         .cycle-stage.active {
@@ -702,55 +701,18 @@
         }
 
         .cycle-icon {
-            font-size: 4rem;
+            font-size: 3.5rem;
         }
 
         .cycle-label {
             font-weight: 700;
-            margin-top: 8px;
             color: #1565c0;
+            margin-top: 5px;
         }
 
         .cycle-arrow {
             font-size: 2rem;
             color: #1976D2;
-        }
-
-        /* Earth Animation */
-        .earth-container {
-            text-align: center;
-            margin: 30px 0;
-        }
-
-        .earth {
-            font-size: 10rem;
-            display: inline-block;
-            transition: transform 1.5s ease-in-out;
-        }
-
-        .sun-earth {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 50px;
-            margin: 20px 0;
-        }
-
-        .sun {
-            font-size: 6rem;
-            animation: sunGlow 2s infinite;
-        }
-
-        @keyframes sunGlow {
-
-            0%,
-            100% {
-                filter: drop-shadow(0 0 20px #ffd54f);
-            }
-
-            50% {
-                filter: drop-shadow(0 0 40px #ff9800);
-            }
         }
 
         /* Seasons */
@@ -765,8 +727,8 @@
             border-radius: 20px;
             padding: 20px;
             text-align: center;
-            transition: all 0.3s;
             cursor: pointer;
+            transition: all 0.3s;
         }
 
         .season-card:hover {
@@ -787,6 +749,10 @@
 
         .season-card.winter {
             border: 3px solid #2196F3;
+        }
+
+        .season-card.visited {
+            background: linear-gradient(145deg, #c8e6c9, #a5d6a7);
         }
 
         .season-icon {
@@ -839,13 +805,6 @@
             font-family: 'Fredoka One', cursive;
             font-size: 1.8rem;
             color: #333;
-            margin-bottom: 10px;
-        }
-
-        .reward-xp {
-            color: #e65100;
-            font-weight: 800;
-            font-size: 1.2rem;
         }
 
         .reward-btn {
@@ -857,16 +816,8 @@
             font-family: 'Fredoka One', cursive;
             font-size: 1.1rem;
             cursor: pointer;
-            transition: all 0.3s;
         }
 
-        .reward-btn:hover {
-            transform: scale(1.05);
-            background: #4CAF50;
-            color: #fff;
-        }
-
-        /* Confetti */
         .confetti-container {
             position: fixed;
             top: 0;
@@ -896,7 +847,6 @@
             }
         }
 
-        /* Toast */
         .toast {
             position: fixed;
             bottom: 30px;
@@ -907,11 +857,9 @@
             padding: 18px 35px;
             border-radius: 50px;
             font-weight: 700;
-            font-size: 1.1rem;
             z-index: 1000;
             opacity: 0;
             transition: all 0.4s;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
         .toast.show {
@@ -931,6 +879,11 @@
             .matter-display {
                 font-size: 6rem;
             }
+
+            .teacher-bubble {
+                max-width: 280px;
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
@@ -939,24 +892,39 @@
     <div class="top-bar">
         <a href="../" class="back-home">← 🏠 Home</a>
         <div class="game-stats">
-            <div class="stat"><span class="stat-icon">⭐</span> <span id="starsEarned">0</span>/12</div>
-            <div class="stat"><span class="stat-icon">🎯</span> <span id="xpEarned">0</span> XP</div>
+            <div class="stat">⭐ <span id="starsEarned">0</span>/12</div>
+            <div class="stat">🎯 <span id="xpEarned">0</span> XP</div>
         </div>
     </div>
 
+    <!-- Audio Controls -->
+    <div class="audio-control">
+        <button class="audio-btn" id="autoSpeakBtn" onclick="toggleAutoSpeak()">🔊 Auto-Read: OFF</button>
+        <button class="audio-btn" onclick="stopSpeaking()">⏹️ Stop</button>
+    </div>
+
+    <!-- Teacher Character -->
+    <div class="teacher">
+        <div class="teacher-bubble" id="teacherBubble">
+            <div class="teacher-name">🧑‍🔬 Professor Spark</div>
+            <div id="teacherText">Welcome to the Science Lab! I'm Professor Spark, and I'll be your guide today. Click
+                on me anytime you need help!</div>
+            <button class="speak-btn" id="speakBtn" onclick="speakTeacher()">🔊 Listen</button>
+        </div>
+        <div class="teacher-avatar" onclick="toggleTeacher()">🧑‍🔬</div>
+    </div>
+
     <div class="container">
-        <!-- Mission Select -->
         <div id="missionSelect">
             <div class="level-header">
                 <h1 class="level-title">🔬 Science Lab 🧪</h1>
-                <p class="level-subtitle">Complete all missions to become a Science Master! 🏆</p>
+                <p class="level-subtitle">Explore, experiment, and discover! 🏆</p>
             </div>
-
             <div class="missions-grid">
                 <div class="mission-card" onclick="startMission('matter')" id="mission-matter">
                     <div class="mission-icon">🧊💧💨</div>
                     <h3 class="mission-title">States of Matter</h3>
-                    <p class="mission-desc">Heat and cool to transform matter!</p>
+                    <p class="mission-desc">Learn about solids, liquids, and gases!</p>
                     <div class="mission-reward">🌟 +3 Stars | +50 XP</div>
                 </div>
                 <div class="mission-card" onclick="startMission('biology')" id="mission-biology">
@@ -980,17 +948,34 @@
             </div>
         </div>
 
-        <!-- Matter Mission -->
+        <!-- MATTER LESSON -->
         <div id="game-matter" class="game-screen">
             <div class="game-container">
                 <button class="close-btn" onclick="closeMission()">✕</button>
                 <h2 class="game-title">🧊 States of Matter 💨</h2>
-                <div class="game-instructions">
-                    <strong>Mission:</strong> Transform matter by heating or cooling! Change it 3 times to complete! 🎯
+
+                <div class="lesson-box">
+                    <div class="lesson-title">📚 Let's Learn!</div>
+                    <div class="lesson-content" id="matterLesson">
+                        <p>Everything around you is made of <span class="key-term">matter</span>! Matter is anything
+                            that takes up space. Your toys, water, and even the air you breathe are all matter!</p>
+                        <p>Matter can exist in three main forms called <span class="key-term">states</span>:</p>
+                        <ul>
+                            <li><strong>🧊 SOLID</strong> - Has a fixed shape. Particles are packed tightly together and
+                                can only vibrate in place. Examples: ice, rocks, your desk!</li>
+                            <li><strong>💧 LIQUID</strong> - Takes the shape of its container. Particles can slide past
+                                each other. Examples: water, juice, milk!</li>
+                            <li><strong>💨 GAS</strong> - Spreads out to fill any space. Particles move freely and
+                                quickly. Examples: air, steam, helium in balloons!</li>
+                        </ul>
+                        <p><strong>🔥 Heat energy</strong> can change matter from one state to another! When you heat
+                            ice, it melts into water. When you heat water more, it turns into steam!</p>
+                    </div>
+                    <button class="listen-btn" onclick="speakLesson('matterLesson')">🔊 Read to Me</button>
                 </div>
 
-                <div class="matter-stage">
-                    <div class="matter-bg"></div>
+                <h3 style="text-align:center;color:#11998e;margin:25px 0;">🎮 Try It! Change the State of Matter!</h3>
+                <div class="interactive-area">
                     <div class="matter-display" id="matterIcon">❄️</div>
                     <div class="matter-name" id="matterName">SOLID (Ice)</div>
                     <div class="matter-info" id="matterInfo">Particles are packed tight and vibrate in place!</div>
@@ -1002,126 +987,166 @@
                         <div class="particle"></div>
                     </div>
                 </div>
-
                 <div class="action-btns">
                     <button class="action-btn btn-hot" onclick="changeMatter('heat')">🔥 HEAT UP!</button>
                     <button class="action-btn btn-cold" onclick="changeMatter('cool')">❄️ COOL DOWN!</button>
                 </div>
-
-                <div style="text-align:center;margin-top:25px;font-size:1.2rem;font-weight:700;color:#666;">
-                    Changes: <span id="matterChanges">0</span>/3 🎯
-                </div>
+                <div style="text-align:center;margin-top:20px;font-size:1.2rem;font-weight:700;color:#666;">Changes:
+                    <span id="matterChanges">0</span>/3 🎯</div>
             </div>
         </div>
 
-        <!-- Biology Mission -->
+        <!-- BIOLOGY LESSON -->
         <div id="game-biology" class="game-screen">
             <div class="game-container">
                 <button class="close-btn" onclick="closeMission()">✕</button>
                 <h2 class="game-title">🌱 Living Things 🦁</h2>
-                <div class="game-instructions">
-                    <strong>Mission:</strong> Learn the plant lifecycle and flip all animal cards! 🎯
+
+                <div class="lesson-box">
+                    <div class="lesson-title">📚 Let's Learn!</div>
+                    <div class="lesson-content" id="biologyLesson">
+                        <p><span class="key-term">Living things</span> are amazing! They can grow, eat, move, and have
+                            babies. Let's learn about plants and animals!</p>
+                        <p><strong>🌱 Plants</strong> are living things that make their own food using sunlight! Here's
+                            how a plant grows:</p>
+                        <ul>
+                            <li><strong>1. Seed</strong> - A tiny package with a baby plant inside</li>
+                            <li><strong>2. Sprout</strong> - The seed opens and a tiny stem pokes out</li>
+                            <li><strong>3. Plant</strong> - Leaves grow and the plant gets bigger</li>
+                            <li><strong>4. Flower/Fruit</strong> - The plant makes flowers or fruit with new seeds!</li>
+                        </ul>
+                        <p><strong>🦁 Animals</strong> come in many types:</p>
+                        <ul>
+                            <li><strong>Mammals</strong> - Have fur and drink mother's milk (dogs, cats, elephants)</li>
+                            <li><strong>Birds</strong> - Have feathers and most can fly (eagles, penguins)</li>
+                            <li><strong>Fish</strong> - Live in water and breathe with gills (goldfish, sharks)</li>
+                            <li><strong>Reptiles</strong> - Have scales and are cold-blooded (snakes, lizards)</li>
+                        </ul>
+                    </div>
+                    <button class="listen-btn" onclick="speakLesson('biologyLesson')">🔊 Read to Me</button>
                 </div>
 
-                <div class="bio-section">
-                    <h3 class="bio-title">🌻 Plant Lifecycle - Click in order!</h3>
-                    <div class="lifecycle" id="lifecycle">
-                        <div class="lifecycle-item" onclick="clickLifecycle(this, 0)">
-                            <div class="lifecycle-icon">🌰</div>
-                            <div class="lifecycle-label">1. Seed</div>
-                        </div>
-                        <span class="arrow">➜</span>
-                        <div class="lifecycle-item" onclick="clickLifecycle(this, 1)">
-                            <div class="lifecycle-icon">🌱</div>
-                            <div class="lifecycle-label">2. Sprout</div>
-                        </div>
-                        <span class="arrow">➜</span>
-                        <div class="lifecycle-item" onclick="clickLifecycle(this, 2)">
-                            <div class="lifecycle-icon">🌿</div>
-                            <div class="lifecycle-label">3. Plant</div>
-                        </div>
-                        <span class="arrow">➜</span>
-                        <div class="lifecycle-item" onclick="clickLifecycle(this, 3)">
-                            <div class="lifecycle-icon">🌸</div>
-                            <div class="lifecycle-label">4. Flower</div>
-                        </div>
+                <h3 style="text-align:center;color:#11998e;margin:25px 0;">🌻 Plant Lifecycle - Click in order!</h3>
+                <div class="lifecycle" id="lifecycle">
+                    <div class="lifecycle-item" onclick="clickLifecycle(this, 0)">
+                        <div class="lifecycle-icon">🌰</div>
+                        <div>1. Seed</div>
+                    </div>
+                    <span class="arrow">➜</span>
+                    <div class="lifecycle-item" onclick="clickLifecycle(this, 1)">
+                        <div class="lifecycle-icon">🌱</div>
+                        <div>2. Sprout</div>
+                    </div>
+                    <span class="arrow">➜</span>
+                    <div class="lifecycle-item" onclick="clickLifecycle(this, 2)">
+                        <div class="lifecycle-icon">🌿</div>
+                        <div>3. Plant</div>
+                    </div>
+                    <span class="arrow">➜</span>
+                    <div class="lifecycle-item" onclick="clickLifecycle(this, 3)">
+                        <div class="lifecycle-icon">🌸</div>
+                        <div>4. Flower</div>
                     </div>
                 </div>
 
-                <div class="bio-section">
-                    <h3 class="bio-title">🦁 Animal Types - Flip all cards!</h3>
-                    <div class="flip-grid" id="animalCards">
-                        <div class="flip-card-container" onclick="flipAnimalCard(this)">
-                            <div class="flip-card">
-                                <div class="flip-front">
-                                    <div class="flip-icon">🐶</div>
-                                    <div class="flip-label">Mammals</div>
-                                </div>
-                                <div class="flip-back">
-                                    <div class="flip-icon">🍼</div>
-                                    <div class="flip-info">Have fur & drink milk!</div>
-                                </div>
+                <h3 style="text-align:center;color:#11998e;margin:30px 0 15px;">🦁 Animal Types - Flip to learn!</h3>
+                <div class="flip-grid">
+                    <div class="flip-container" onclick="flipAnimalCard(this)">
+                        <div class="flip-card">
+                            <div class="flip-front">
+                                <div class="flip-icon">🐶</div>
+                                <div class="flip-label">Mammals</div>
+                            </div>
+                            <div class="flip-back">
+                                <div class="flip-icon">🍼</div>
+                                <div class="flip-info"><strong>Mammals</strong> have fur or hair and drink milk from
+                                    their mothers when babies. Dogs, cats, elephants, and YOU are mammals!</div>
                             </div>
                         </div>
-                        <div class="flip-card-container" onclick="flipAnimalCard(this)">
-                            <div class="flip-card">
-                                <div class="flip-front">
-                                    <div class="flip-icon">🐊</div>
-                                    <div class="flip-label">Reptiles</div>
-                                </div>
-                                <div class="flip-back">
-                                    <div class="flip-icon">🥚</div>
-                                    <div class="flip-info">Have scales & lay eggs!</div>
-                                </div>
+                    </div>
+                    <div class="flip-container" onclick="flipAnimalCard(this)">
+                        <div class="flip-card">
+                            <div class="flip-front">
+                                <div class="flip-icon">🐦</div>
+                                <div class="flip-label">Birds</div>
+                            </div>
+                            <div class="flip-back">
+                                <div class="flip-icon">🪶</div>
+                                <div class="flip-info"><strong>Birds</strong> have feathers and wings. Most can fly, but
+                                    some like penguins swim! They lay eggs with hard shells.</div>
                             </div>
                         </div>
-                        <div class="flip-card-container" onclick="flipAnimalCard(this)">
-                            <div class="flip-card">
-                                <div class="flip-front">
-                                    <div class="flip-icon">🐦</div>
-                                    <div class="flip-label">Birds</div>
-                                </div>
-                                <div class="flip-back">
-                                    <div class="flip-icon">🪶</div>
-                                    <div class="flip-info">Have feathers & fly!</div>
-                                </div>
+                    </div>
+                    <div class="flip-container" onclick="flipAnimalCard(this)">
+                        <div class="flip-card">
+                            <div class="flip-front">
+                                <div class="flip-icon">🐟</div>
+                                <div class="flip-label">Fish</div>
+                            </div>
+                            <div class="flip-back">
+                                <div class="flip-icon">🌊</div>
+                                <div class="flip-info"><strong>Fish</strong> live in water and breathe through gills.
+                                    They have fins to swim and scales on their bodies!</div>
                             </div>
                         </div>
-                        <div class="flip-card-container" onclick="flipAnimalCard(this)">
-                            <div class="flip-card">
-                                <div class="flip-front">
-                                    <div class="flip-icon">🐟</div>
-                                    <div class="flip-label">Fish</div>
-                                </div>
-                                <div class="flip-back">
-                                    <div class="flip-icon">🌊</div>
-                                    <div class="flip-info">Have fins & gills!</div>
-                                </div>
+                    </div>
+                    <div class="flip-container" onclick="flipAnimalCard(this)">
+                        <div class="flip-card">
+                            <div class="flip-front">
+                                <div class="flip-icon">🐊</div>
+                                <div class="flip-label">Reptiles</div>
+                            </div>
+                            <div class="flip-back">
+                                <div class="flip-icon">🥚</div>
+                                <div class="flip-info"><strong>Reptiles</strong> have scaly skin and lay eggs. Snakes,
+                                    lizards, and crocodiles are reptiles!</div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div style="text-align:center;margin-top:25px;font-size:1.2rem;font-weight:700;color:#666;">
-                    Progress: <span id="bioProgress">0</span>/8 🎯
-                </div>
+                <div style="text-align:center;margin-top:25px;font-size:1.2rem;font-weight:700;color:#666;">Progress:
+                    <span id="bioProgress">0</span>/8 🎯</div>
             </div>
         </div>
 
-        <!-- Physics Mission -->
+        <!-- PHYSICS LESSON -->
         <div id="game-physics" class="game-screen">
             <div class="game-container">
                 <button class="close-btn" onclick="closeMission()">✕</button>
                 <h2 class="game-title">⚡ Forces & Motion 🧲</h2>
-                <div class="game-instructions">
-                    <strong>Mission:</strong> Move the ball 5 times and test the magnets! 🎯
+
+                <div class="lesson-box">
+                    <div class="lesson-title">📚 Let's Learn!</div>
+                    <div class="lesson-content" id="physicsLesson">
+                        <p>A <span class="key-term">force</span> is a push or a pull! Forces make things move, stop, or
+                            change direction.</p>
+                        <p><strong>💪 Types of Forces:</strong></p>
+                        <ul>
+                            <li><strong>Push</strong> - When you move something away from you (pushing a toy car)</li>
+                            <li><strong>Pull</strong> - When you move something toward you (pulling a wagon)</li>
+                            <li><strong>Gravity</strong> - The force that pulls everything down toward Earth (why things
+                                fall!)</li>
+                            <li><strong>Friction</strong> - The force that slows things down (why a ball stops rolling)
+                            </li>
+                        </ul>
+                        <p><strong>🧲 Magnets</strong> are special! They can push and pull without touching!</p>
+                        <ul>
+                            <li>Every magnet has two ends: <strong>North (N)</strong> and <strong>South (S)</strong>
+                            </li>
+                            <li><strong>Opposite poles ATTRACT</strong> - N and S pull toward each other!</li>
+                            <li><strong>Same poles REPEL</strong> - N and N push away from each other!</li>
+                        </ul>
+                    </div>
+                    <button class="listen-btn" onclick="speakLesson('physicsLesson')">🔊 Read to Me</button>
                 </div>
 
-                <div class="force-demo">
-                    <h3 style="color:#1565c0;margin-bottom:20px;">👆 Push and Pull the Ball!</h3>
-                    <div class="force-ball" id="forceBall">⚽</div>
-                    <div class="force-track">
-                        <div class="force-marker" id="forceMarker"></div>
+                <h3 style="text-align:center;color:#11998e;margin:25px 0;">⚽ Push and Pull the Ball!</h3>
+                <div class="interactive-area">
+                    <div style="font-size:6rem;transition:all 0.4s;" id="forceBall">⚽</div>
+                    <div
+                        style="width:300px;height:8px;background:rgba(0,0,0,0.1);border-radius:4px;margin:20px auto;position:relative;">
+                        <div style="position:absolute;top:50%;transform:translateY(-50%);width:20px;height:20px;background:#4CAF50;border-radius:50%;transition:left 0.4s;left:50%;"
+                            id="forceMarker"></div>
                     </div>
                     <div class="action-btns">
                         <button class="action-btn btn-cold" onclick="moveBall('left')">👈 PUSH LEFT</button>
@@ -1131,28 +1156,52 @@
                     </div>
                 </div>
 
-                <h3 style="color:#11998e;margin:30px 0 20px;text-align:center;">🧲 Magnet Challenge - Make them ATTRACT!
+                <h3 style="text-align:center;color:#11998e;margin:30px 0 20px;">🧲 Magnet Challenge - Make them ATTRACT!
                 </h3>
-                <div class="magnet-demo">
-                    <div class="magnet-pole pole-n" id="mag1" onclick="flipMagnet(1)">🔴 N</div>
-                    <div class="magnet-result" id="magnetResult">⬅️➡️</div>
-                    <div class="magnet-pole pole-s" id="mag2" onclick="flipMagnet(2)">🔴 N</div>
+                <div style="display:flex;justify-content:center;align-items:center;gap:30px;margin:20px 0;">
+                    <div style="padding:25px 40px;font-family:'Fredoka One',cursive;font-size:1.5rem;border-radius:15px;cursor:pointer;background:linear-gradient(145deg,#f44336,#e53935);color:#fff;"
+                        id="mag1" onclick="flipMagnet(1)">🔴 N</div>
+                    <div style="font-size:3rem;" id="magnetResult">⬅️➡️</div>
+                    <div style="padding:25px 40px;font-family:'Fredoka One',cursive;font-size:1.5rem;border-radius:15px;cursor:pointer;background:linear-gradient(145deg,#f44336,#e53935);color:#fff;"
+                        id="mag2" onclick="flipMagnet(2)">🔴 N</div>
                 </div>
                 <p style="text-align:center;font-weight:700;color:#11998e;" id="magnetText">Same poles REPEL! Click to
                     flip poles!</p>
             </div>
         </div>
 
-        <!-- Earth Mission -->
+        <!-- EARTH LESSON -->
         <div id="game-earth" class="game-screen">
             <div class="game-container">
                 <button class="close-btn" onclick="closeMission()">✕</button>
                 <h2 class="game-title">🌍 Earth & Space ☀️</h2>
-                <div class="game-instructions">
-                    <strong>Mission:</strong> Watch the water cycle, spin Earth, and click all seasons! 🎯
+
+                <div class="lesson-box">
+                    <div class="lesson-title">📚 Let's Learn!</div>
+                    <div class="lesson-content" id="earthLesson">
+                        <p>Our home, <span class="key-term">Earth</span>, is an amazing planet spinning in space!</p>
+                        <p><strong>💧 The Water Cycle:</strong> Water moves around and around!</p>
+                        <ul>
+                            <li><strong>1. Evaporation</strong> - The sun heats water in oceans and lakes, turning it
+                                into invisible water vapor that rises up!</li>
+                            <li><strong>2. Condensation</strong> - High in the sky, water vapor cools and forms tiny
+                                droplets that make clouds!</li>
+                            <li><strong>3. Precipitation</strong> - When clouds get heavy, water falls as rain or snow!
+                            </li>
+                            <li><strong>4. Collection</strong> - Water flows into rivers, lakes, and oceans, and the
+                                cycle starts again!</li>
+                        </ul>
+                        <p><strong>🌍 Day and Night:</strong> Earth spins like a top! The side facing the Sun has
+                            daytime, while the other side has nighttime. One full spin takes 24 hours - that's one day!
+                        </p>
+                        <p><strong>🍂 Seasons:</strong> Earth also travels around the Sun in one year. Because Earth is
+                            tilted, different parts get more sunlight at different times, creating seasons - Spring,
+                            Summer, Fall, and Winter!</p>
+                    </div>
+                    <button class="listen-btn" onclick="speakLesson('earthLesson')">🔊 Read to Me</button>
                 </div>
 
-                <h3 style="color:#1565c0;margin:20px 0;">💧 The Water Cycle</h3>
+                <h3 style="text-align:center;color:#1565c0;margin:25px 0;">💧 The Water Cycle - Watch it go!</h3>
                 <div class="water-cycle">
                     <div class="cycle-stages" id="waterCycle">
                         <div class="cycle-stage">
@@ -1184,31 +1233,35 @@
                         CYCLE</button>
                 </div>
 
-                <h3 style="color:#11998e;margin:30px 0 15px;text-align:center;">🌍 Day & Night - Spin the Earth!</h3>
-                <div class="earth-container">
-                    <div class="sun-earth">
-                        <div class="sun">☀️</div>
-                        <div class="earth" id="earth">🌍</div>
+                <h3 style="text-align:center;color:#11998e;margin:30px 0 15px;">🌍 Spin the Earth - Day & Night!</h3>
+                <div style="text-align:center;">
+                    <div style="display:flex;justify-content:center;align-items:center;gap:50px;margin:20px 0;">
+                        <div style="font-size:6rem;animation:sunGlow 2s infinite;">☀️</div>
+                        <div style="font-size:10rem;transition:transform 1.5s ease-in-out;" id="earth">🌍</div>
                     </div>
-                    <button class="action-btn btn-hot" onclick="spinEarth()" style="margin-top:15px;">🔄 SPIN!</button>
+                    <button class="action-btn btn-hot" onclick="spinEarth()">🔄 SPIN!</button>
                     <p id="spinCount" style="margin-top:10px;font-weight:700;color:#666;">Spins: 0/2</p>
                 </div>
 
-                <h3 style="color:#11998e;margin:30px 0 15px;text-align:center;">🍂 Four Seasons - Click all!</h3>
+                <h3 style="text-align:center;color:#11998e;margin:30px 0 15px;">🍂 Four Seasons - Click all!</h3>
                 <div class="seasons-grid">
-                    <div class="season-card spring" onclick="clickSeason(this)">
+                    <div class="season-card spring"
+                        onclick="clickSeason(this,'Spring: Flowers bloom, baby animals are born!')">
                         <div class="season-icon">🌸</div>
                         <div class="season-name">Spring</div>
                     </div>
-                    <div class="season-card summer" onclick="clickSeason(this)">
+                    <div class="season-card summer"
+                        onclick="clickSeason(this,'Summer: Hot days, long sunshine, time for swimming!')">
                         <div class="season-icon">☀️</div>
                         <div class="season-name">Summer</div>
                     </div>
-                    <div class="season-card fall" onclick="clickSeason(this)">
+                    <div class="season-card fall"
+                        onclick="clickSeason(this,'Fall: Leaves change colors and fall from trees!')">
                         <div class="season-icon">🍂</div>
                         <div class="season-name">Fall</div>
                     </div>
-                    <div class="season-card winter" onclick="clickSeason(this)">
+                    <div class="season-card winter"
+                        onclick="clickSeason(this,'Winter: Cold and snowy, time to bundle up!')">
                         <div class="season-icon">❄️</div>
                         <div class="season-name">Winter</div>
                     </div>
@@ -1217,7 +1270,6 @@
         </div>
     </div>
 
-    <!-- Reward Popup -->
     <div class="reward-popup" id="rewardPopup">
         <div class="reward-stars">⭐⭐⭐</div>
         <div class="reward-title">Mission Complete!</div>
@@ -1227,8 +1279,105 @@
 
     <div class="confetti-container" id="confetti"></div>
     <div class="toast" id="toast"></div>
+    <style>
+        @keyframes sunGlow {
+
+            0%,
+            100% {
+                filter: drop-shadow(0 0 20px #ffd54f);
+            }
+
+            50% {
+                filter: drop-shadow(0 0 40px #ff9800);
+            }
+        }
+    </style>
 
     <script>
+        // ===== TEXT-TO-SPEECH FUNCTIONALITY =====
+        let autoSpeak = false;
+        let currentUtterance = null;
+
+        function speak(text, onEnd) {
+            stopSpeaking();
+            if ('speechSynthesis' in window) {
+                currentUtterance = new SpeechSynthesisUtterance(text);
+                currentUtterance.rate = 0.9;
+                currentUtterance.pitch = 1.1;
+
+                // Try to find a friendly voice
+                const voices = speechSynthesis.getVoices();
+                const preferred = voices.find(v => v.name.includes('Google') || v.name.includes('Female') || v.name.includes('Samantha'));
+                if (preferred) currentUtterance.voice = preferred;
+
+                if (onEnd) currentUtterance.onend = onEnd;
+                speechSynthesis.speak(currentUtterance);
+            }
+        }
+
+        function stopSpeaking() {
+            if ('speechSynthesis' in window) {
+                speechSynthesis.cancel();
+            }
+            document.querySelectorAll('.listen-btn, .speak-btn').forEach(b => b.classList.remove('speaking'));
+        }
+
+        function toggleAutoSpeak() {
+            autoSpeak = !autoSpeak;
+            const btn = document.getElementById('autoSpeakBtn');
+            btn.textContent = '🔊 Auto-Read: ' + (autoSpeak ? 'ON' : 'OFF');
+            btn.classList.toggle('active', autoSpeak);
+            if (autoSpeak) showToast('🔊 I\'ll read lessons to you automatically!');
+        }
+
+        function speakLesson(lessonId) {
+            const lesson = document.getElementById(lessonId);
+            if (!lesson) return;
+            const text = lesson.innerText;
+            const btn = lesson.parentElement.querySelector('.listen-btn');
+            btn.classList.add('speaking');
+            speak(text, () => btn.classList.remove('speaking'));
+        }
+
+        // Teacher Character
+        let teacherVisible = false;
+        const teacherMessages = {
+            welcome: "Welcome to the Science Lab! I'm Professor Spark, and I'll be your guide today. Click on any mission to start learning!",
+            matter: "Excellent choice! In this lesson, you'll learn about the three states of matter: solids, liquids, and gases. Did you know that ice, water, and steam are all the same thing - just in different forms?",
+            biology: "Living things are fascinating! You'll discover how plants grow from tiny seeds and meet different types of animals. Every living thing is special!",
+            physics: "Get ready to learn about forces! Forces are what make things move. You push a swing, gravity pulls you down - forces are everywhere!",
+            earth: "Our beautiful planet Earth has so many wonders! You'll learn about the water cycle, why we have day and night, and what causes the seasons."
+        };
+
+        function toggleTeacher() {
+            const bubble = document.getElementById('teacherBubble');
+            teacherVisible = !teacherVisible;
+            bubble.classList.toggle('show', teacherVisible);
+        }
+
+        function speakTeacher() {
+            const text = document.getElementById('teacherText').innerText;
+            const btn = document.getElementById('speakBtn');
+            btn.classList.add('speaking');
+            speak(text, () => btn.classList.remove('speaking'));
+        }
+
+        function teacherSay(message) {
+            const bubble = document.getElementById('teacherBubble');
+            document.getElementById('teacherText').textContent = message;
+            bubble.classList.add('show');
+            teacherVisible = true;
+            if (autoSpeak) {
+                setTimeout(() => speak(message), 500);
+            }
+        }
+
+        // Show welcome message on load
+        setTimeout(() => {
+            teacherSay(teacherMessages.welcome);
+        }, 1000);
+
+        // ===== GAME LOGIC =====
         let totalStars = parseInt(localStorage.getItem('science_stars') || 0);
         let totalXP = parseInt(localStorage.getItem('science_xp') || 0);
         let completedMissions = JSON.parse(localStorage.getItem('science_completed') || '[]');
@@ -1246,11 +1395,24 @@
         function startMission(id) {
             document.getElementById('missionSelect').style.display = 'none';
             document.getElementById('game-' + id).classList.add('active');
+            teacherSay(teacherMessages[id]);
+
+            // Auto-read lesson if enabled
+            if (autoSpeak) {
+                setTimeout(() => {
+                    const lessonId = id + 'Lesson';
+                    if (document.getElementById(lessonId)) {
+                        speakLesson(lessonId);
+                    }
+                }, 2000);
+            }
         }
 
         function closeMission() {
+            stopSpeaking();
             document.querySelectorAll('.game-screen').forEach(g => g.classList.remove('active'));
             document.getElementById('missionSelect').style.display = 'block';
+            teacherSay("Great work! Pick another mission to keep learning!");
         }
 
         function showToast(msg) {
@@ -1267,8 +1429,6 @@
                 el.className = 'confetti';
                 el.style.left = Math.random() * 100 + '%';
                 el.style.background = colors[Math.floor(Math.random() * colors.length)];
-                el.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
-                el.style.animationDelay = Math.random() * 0.5 + 's';
                 container.appendChild(el);
                 setTimeout(() => el.remove(), 3000);
             }
@@ -1285,6 +1445,7 @@
                 updateStats();
                 document.getElementById('rewardPopup').classList.add('show');
                 createConfetti(50);
+                speak("Congratulations! You completed the mission and earned 3 stars!");
             }
         }
 
@@ -1296,6 +1457,12 @@
         // Matter Game
         let matterState = 0;
         let matterChanges = 0;
+        const matterStates = [
+            { icon: '❄️', name: 'SOLID (Ice)', info: 'Particles are packed tight and vibrate in place!', particle: 'solid', speech: 'This is a solid! The tiny particles are packed close together and can only wiggle a little bit.' },
+            { icon: '💧', name: 'LIQUID (Water)', info: 'Particles flow and slide past each other!', particle: 'liquid', speech: 'Now it\'s a liquid! The particles can move around and slide past each other.' },
+            { icon: '💨', name: 'GAS (Steam)', info: 'Particles spread out and move super fast!', particle: 'gas', speech: 'Now it\'s a gas! The particles are zooming around everywhere really fast!' }
+        ];
+
         function changeMatter(action) {
             const prev = matterState;
             if (action === 'heat' && matterState < 2) matterState++;
@@ -1303,12 +1470,7 @@
             if (prev !== matterState) {
                 matterChanges++;
                 document.getElementById('matterChanges').textContent = matterChanges;
-                const states = [
-                    { icon: '❄️', name: 'SOLID (Ice)', info: 'Particles packed tight!', particle: 'solid' },
-                    { icon: '💧', name: 'LIQUID (Water)', info: 'Particles flow around!', particle: 'liquid' },
-                    { icon: '💨', name: 'GAS (Steam)', info: 'Particles fly everywhere!', particle: 'gas' }
-                ];
-                const s = states[matterState];
+                const s = matterStates[matterState];
                 const icon = document.getElementById('matterIcon');
                 icon.classList.add('animate');
                 setTimeout(() => icon.classList.remove('animate'), 500);
@@ -1317,6 +1479,7 @@
                 document.getElementById('matterInfo').textContent = s.info;
                 document.getElementById('particles').className = 'particles ' + s.particle;
                 showToast(action === 'heat' ? '🔥 HEATING UP!' : '❄️ COOLING DOWN!');
+                if (autoSpeak) speak(s.speech);
                 if (matterChanges >= 3) completeMission('matter');
             }
         }
@@ -1325,28 +1488,32 @@
         let lifecycleStep = 0;
         let cardsFlipped = 0;
         let bioProgress = 0;
+
         function clickLifecycle(el, step) {
             if (step === lifecycleStep) {
                 el.classList.add('active');
                 lifecycleStep++;
                 bioProgress++;
                 updateBioProgress();
-                showToast('✅ Step ' + lifecycleStep + ' complete!');
+                const stages = ['First comes the seed!', 'The seed sprouts a tiny stem!', 'The plant grows big leaves!', 'Beautiful flowers bloom!'];
+                showToast('✅ ' + stages[step]);
+                if (autoSpeak) speak(stages[step]);
                 if (lifecycleStep >= 4 && cardsFlipped >= 4) completeMission('biology');
             } else {
                 showToast('❌ Click them in order!');
             }
         }
+
         function flipAnimalCard(el) {
             if (!el.classList.contains('flipped')) {
                 el.classList.add('flipped');
                 cardsFlipped++;
                 bioProgress++;
                 updateBioProgress();
-                showToast('🦁 ' + (4 - cardsFlipped) + ' cards left!');
                 if (lifecycleStep >= 4 && cardsFlipped >= 4) completeMission('biology');
             }
         }
+
         function updateBioProgress() {
             document.getElementById('bioProgress').textContent = bioProgress;
         }
@@ -1356,6 +1523,7 @@
         let ballMoves = 0;
         let m1 = 'N', m2 = 'N';
         let magnetDone = false;
+
         function moveBall(dir) {
             ballPos += dir === 'left' ? -15 : 15;
             ballPos = Math.max(10, Math.min(90, ballPos));
@@ -1363,17 +1531,21 @@
             document.getElementById('forceBall').style.transform = `translateX(${(ballPos - 50) * 3}px)`;
             ballMoves++;
             document.getElementById('ballMoves').textContent = Math.min(ballMoves, 5);
+            const msg = dir === 'left' ? 'You pushed it! Push moves things away from you!' : 'You pulled it! Pull moves things toward you!';
             showToast(dir === 'left' ? '👈 PUSH!' : '👉 PULL!');
+            if (autoSpeak && ballMoves <= 2) speak(msg);
             if (ballMoves >= 5 && magnetDone) completeMission('physics');
         }
+
         function flipMagnet(n) {
-            if (n === 1) { m1 = m1 === 'N' ? 'S' : 'N'; document.getElementById('mag1').textContent = m1 === 'N' ? '🔴 N' : '🔵 S'; document.getElementById('mag1').className = 'magnet-pole ' + (m1 === 'N' ? 'pole-n' : 'pole-s'); }
-            if (n === 2) { m2 = m2 === 'N' ? 'S' : 'N'; document.getElementById('mag2').textContent = m2 === 'N' ? '🔴 N' : '🔵 S'; document.getElementById('mag2').className = 'magnet-pole ' + (m2 === 'N' ? 'pole-n' : 'pole-s'); }
+            if (n === 1) { m1 = m1 === 'N' ? 'S' : 'N'; document.getElementById('mag1').textContent = m1 === 'N' ? '🔴 N' : '🔵 S'; document.getElementById('mag1').style.background = m1 === 'N' ? 'linear-gradient(145deg,#f44336,#e53935)' : 'linear-gradient(145deg,#2196F3,#1976D2)'; }
+            if (n === 2) { m2 = m2 === 'N' ? 'S' : 'N'; document.getElementById('mag2').textContent = m2 === 'N' ? '🔴 N' : '🔵 S'; document.getElementById('mag2').style.background = m2 === 'N' ? 'linear-gradient(145deg,#f44336,#e53935)' : 'linear-gradient(145deg,#2196F3,#1976D2)'; }
             if (m1 !== m2) {
                 document.getElementById('magnetResult').textContent = '❤️';
                 document.getElementById('magnetText').textContent = 'ATTRACT! Opposite poles pull together! ✅';
                 magnetDone = true;
                 showToast('🧲 MAGNETS ATTRACT!');
+                if (autoSpeak) speak('Amazing! North and South poles attract each other! Opposites attract!');
                 if (ballMoves >= 5) completeMission('physics');
             } else {
                 document.getElementById('magnetResult').textContent = '⬅️➡️';
@@ -1385,36 +1557,48 @@
         let spinCount = 0;
         let seasonsClicked = 0;
         let cycleDone = false;
+
         function animateWaterCycle() {
             const stages = document.querySelectorAll('#waterCycle .cycle-stage');
+            const explanations = ['Water starts in the ocean!', 'The sun heats it and it evaporates up!', 'It becomes clouds in the sky!', 'Then it falls as rain!', 'And the cycle repeats forever!'];
             stages.forEach((s, i) => {
                 setTimeout(() => {
                     stages.forEach(st => st.classList.remove('active'));
                     s.classList.add('active');
-                }, i * 700);
+                    if (autoSpeak) speak(explanations[i]);
+                }, i * 1500);
             });
-            setTimeout(() => { stages.forEach(st => st.classList.remove('active')); cycleDone = true; checkEarthComplete(); showToast('💧 Water cycle complete!'); }, 3500);
+            setTimeout(() => { stages.forEach(st => st.classList.remove('active')); cycleDone = true; checkEarthComplete(); showToast('💧 Water cycle complete!'); }, 7500);
         }
+
         function spinEarth() {
             spinCount++;
             const earth = document.getElementById('earth');
             earth.style.transform = `rotate(${spinCount * 360}deg)`;
             document.getElementById('spinCount').textContent = 'Spins: ' + Math.min(spinCount, 2) + '/2';
             showToast('🌍 One spin = one day!');
+            if (autoSpeak && spinCount === 1) speak('Earth spins around once every 24 hours. That gives us day and night!');
             checkEarthComplete();
         }
-        function clickSeason(el) {
-            if (!el.classList.contains('clicked')) {
-                el.classList.add('clicked');
-                el.style.background = '#4CAF50';
-                el.style.color = '#fff';
+
+        function clickSeason(el, info) {
+            if (!el.classList.contains('visited')) {
+                el.classList.add('visited');
                 seasonsClicked++;
-                showToast('🍂 ' + (4 - seasonsClicked) + ' seasons left!');
+                showToast('🍂 ' + info.split(':')[0] + '!');
+                if (autoSpeak) speak(info);
                 checkEarthComplete();
             }
         }
+
         function checkEarthComplete() {
             if (cycleDone && spinCount >= 2 && seasonsClicked >= 4) completeMission('earth');
+        }
+
+        // Load voices
+        if ('speechSynthesis' in window) {
+            speechSynthesis.getVoices();
+            speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
         }
     </script>
 </body>
