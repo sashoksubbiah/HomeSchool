@@ -176,6 +176,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            overflow-y: auto; /* ENABLE SCROLLING */
+            -webkit-overflow-scrolling: touch;
         }
 
         #robot-container {
@@ -209,6 +211,7 @@
             display: flex; justify-content: space-between; align-items: center;
             background: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.05); z-index: 100;
             box-sizing: border-box;
+            flex-shrink: 0; /* Prevent HUD from shrinking */
         }
 
         .home-btn {
@@ -223,7 +226,7 @@
         .phase { padding: 8px 15px; background: #eee; border-radius: 15px; color: #aaa; font-size: 0.9rem; font-weight: bold; }
         .phase.active { background: #FF9800; color: white; transform: scale(1.1); box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
 
-        #lab-area { flex: 1; width: 100%; position: relative; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 20px; }
+        #lab-area { flex: 1; width: 100%; position: relative; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 20px; min-height: 400px; }
         #tank-container {
             position: relative; width: 80%; max-width: 600px; height: 55vh;
             border: 8px solid #333; border-top: none; border-radius: 0 0 20px 20px;
@@ -295,13 +298,15 @@
         /* --- MATTER EXPERIMENT STYLES --- */
         #matter-stage {
             flex: 1; width: 100%; position: relative; display: none; /* Toggled via JS */
-            flex-direction: column; align-items: center; justify-content: center;
+            flex-direction: column; align-items: center; justify-content: flex-start; /* Changed for scroll */
+            padding-top: 20px; padding-bottom: 50px;
         }
 
         .beaker-container {
             position: relative; width: 250px; height: 300px;
             display: flex; justify-content: center; align-items: flex-end;
             margin-bottom: 20px;
+            flex-shrink: 0; /* Prevent squishing */
         }
         .beaker {
             width: 200px; height: 250px; border: 8px solid #555; border-top: none;
@@ -328,7 +333,7 @@
         .state-gas { height: 100%; background: transparent; align-items: flex-start; padding-top: 40px; }
         .state-gas::after { 
             content: '☁️'; 
-            animation: rise-expand 2.5s infinite linear; /* Updated animation */
+            animation: rise-expand 2.5s infinite linear; 
             opacity: 0.7; 
             font-size: 5rem; 
         }
@@ -351,7 +356,7 @@
         .controls-area {
             display: flex; gap: 20px; align-items: center; background: white;
             padding: 15px; border-radius: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            margin-top: 20px;
+            margin-top: 20px; flex-shrink: 0;
         }
 
         .temp-btn {
@@ -375,7 +380,44 @@
         .chemical-area {
             margin-top: 30px; display: flex; align-items: center; gap: 15px;
             background: #FFF3E0; padding: 10px 20px; border-radius: 15px; border: 2px dashed #FF9800;
+            flex-shrink: 0;
         }
+
+        /* --- Explanation Cards (New) --- */
+        .explanation-container {
+            margin-top: 30px;
+            width: 90%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding-bottom: 20px;
+        }
+
+        .expl-card {
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            border-left: 6px solid #ccc;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+            opacity: 0.6;
+            text-align: left;
+        }
+
+        .expl-card.active {
+            opacity: 1;
+            transform: scale(1.02);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .expl-card h3 { margin: 0 0 5px 0; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; }
+        .expl-card p { margin: 0; font-size: 1rem; color: #555; line-height: 1.4; }
+
+        /* Specific colors */
+        .expl-card.solid.active { border-left-color: #2196F3; background: #E3F2FD; }
+        .expl-card.liquid.active { border-left-color: #FF9800; background: #FFF3E0; }
+        .expl-card.gas.active { border-left-color: #F44336; background: #FFEBEE; }
 
     </style>
 </head>
@@ -464,6 +506,22 @@
                         <div id="temp-display" style="font-size:1.5rem;">Freezing</div>
                     </div>
                     <button class="temp-btn btn-heat" onclick="changeTemp(1)">🔥</button>
+                </div>
+
+                <!-- Detailed Explanation Cards -->
+                <div class="explanation-container">
+                    <div class="expl-card solid" id="expl-solid">
+                        <h3>🧊 Solid (Ice)</h3>
+                        <p>Brr! It is cold. The tiny particles hold hands tightly and don't move much. They form a hard shape.</p>
+                    </div>
+                    <div class="expl-card liquid" id="expl-liquid">
+                        <h3>💧 Liquid (Water)</h3>
+                        <p>Getting warmer! Heat gives particles energy to dance and slide around each other. This makes water flow!</p>
+                    </div>
+                    <div class="expl-card gas" id="expl-gas">
+                        <h3>☁️ Gas (Steam)</h3>
+                        <p>Super Hot! The particles have so much energy they fly apart! They spread out to fill all the space.</p>
+                    </div>
                 </div>
 
                 <!-- Chemical Change Demo -->
@@ -900,9 +958,19 @@
             const flame = document.getElementById('matter-flame');
             const disp = document.getElementById('temp-display');
 
+            // Explanation Cards
+            const cardSolid = document.getElementById('expl-solid');
+            const cardLiquid = document.getElementById('expl-liquid');
+            const cardGas = document.getElementById('expl-gas');
+
             // Reset Classes
             sub.className = 'substance';
             flame.classList.remove('active');
+            
+            // Remove active highlight from text
+            cardSolid.classList.remove('active');
+            cardLiquid.classList.remove('active');
+            cardGas.classList.remove('active');
 
             if (matterTemp === 0) {
                 // SOLID
@@ -910,14 +978,18 @@
                 merc.style.height = '20%';
                 merc.style.background = '#2196F3'; // Cold blue
                 disp.innerText = "Solid (Ice)";
+                cardSolid.classList.add('active'); // Highlight
+                
                 if(!silent) speak("Freezing! The water particles are cold and holding hands tightly. They can't move, so they form hard Ice.");
             } else if (matterTemp === 1) {
                 // LIQUID
                 sub.classList.add('state-liquid');
                 merc.style.height = '50%';
                 merc.style.background = '#FF9800'; // Warm
-                flame.classList.add('active'); // Needs heat to melt
+                flame.classList.add('active'); 
                 disp.innerText = "Liquid (Water)";
+                cardLiquid.classList.add('active'); // Highlight
+
                 if(!silent) speak("Melting! Heat gives the particles energy to dance and slide around. That is why Liquid water flows!");
             } else if (matterTemp === 2) {
                 // GAS
@@ -926,6 +998,8 @@
                 merc.style.background = '#F44336'; // Hot
                 flame.classList.add('active');
                 disp.innerText = "Gas (Steam)";
+                cardGas.classList.add('active'); // Highlight
+
                 if(!silent) speak("Boiling! The particles are super hot and fast! They fly apart and spread out to become Gas!");
             }
         }
